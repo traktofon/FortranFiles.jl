@@ -1,5 +1,17 @@
 module FortranFiles
 
-# package code goes here
+using Compat
 
-end # module
+export FortranFile
+export REC32, REC64, RECVL
+export FString, trimstring
+
+include("recordtype.jl")
+include("file.jl")
+include("recordsimple.jl")
+include("recordvl.jl")
+include("string.jl")
+include("read.jl")
+include("write.jl")
+
+end
