@@ -1,12 +1,5 @@
 import Base: close, unsafe_read, unsafe_write
 
-
-immutable RecordTypeSimple{T} <: RecordType end
-
-const REC32 = RecordTypeSimple{Int32}()
-const REC64 = RecordTypeSimple{Int64}()
-
-
 type RecordSimple{T} <: Record
    io       :: IO    # underlying I/O stream
    reclen   :: T     # length of this record

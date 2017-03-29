@@ -1,16 +1,6 @@
 import Base: close, unsafe_read, unsafe_write
 
-
-immutable RecordTypeVariableLength <: RecordType
-   max_subrecord_length :: Int
-end
-
-const max_subrecord_length = 2^31-9
-
-const RECVL = RecordTypeVariableLength(max_subrecord_length)
-
-
-type RecordVariableLength <: Record
+type RecordFlexible <: Record
    io        :: IO      # underlying I/O stream
    maxsrlen  :: Int32   # maximum subrecord length
    subreclen :: Int32   # length of current subrecord
@@ -38,22 +28,22 @@ function wrmarker(io, subreclen, sign)
    write(io, convert(Int32, marker))
 end
 
-function Record( f::FortranFile{RecordTypeVariableLength} )
+function Record( f::FortranFile{RecordTypeFlexible} )
 ## constructor for readable records
    msl = f.rectype.max_subrecord_length
    subreclen, more = rdmarker(f.io)
-   RecordVariableLength(f.io, msl, subreclen, subreclen, more, false, false, 0)
+   RecordFlexible(f.io, msl, subreclen, subreclen, more, false, false, 0)
 end
 
-function Record( f::FortranFile{RecordTypeVariableLength}, towrite::Integer )
+function Record( f::FortranFile{RecordTypeFlexible}, towrite::Integer )
 ## constructor for writable records
    msl = f.rectype.max_subrecord_length
    subreclen, more = mkmarker(towrite, msl)
    wrmarker(f.io, subreclen, more)
-   RecordVariableLength(f.io, msl, subreclen, subreclen, more, true, true, towrite)
+   RecordFlexible(f.io, msl, subreclen, subreclen, more, true, true, towrite)
 end
 
-function advance!( rec::RecordVariableLength )
+function advance!( rec::RecordFlexible )
    subreclen, sign = rdmarker(rec.io)
    if subreclen != rec.subreclen; error("trailing subrecord marker doesn't match"); end
    if rec.more
@@ -64,7 +54,7 @@ function advance!( rec::RecordVariableLength )
    nothing
 end
 
-function unsafe_read( rec::RecordVariableLength, p::Ptr{UInt8}, n::UInt )
+function unsafe_read( rec::RecordFlexible, p::Ptr{UInt8}, n::UInt )
    while (n>0)
       if rec.subleft==0; error("attempting to read beyond record end"); end
       toread = min(n, rec.subleft)
@@ -77,7 +67,7 @@ function unsafe_read( rec::RecordVariableLength, p::Ptr{UInt8}, n::UInt )
    nothing
 end
 
-function unsafe_write( rec::RecordVariableLength, p::Ptr{UInt8}, n::UInt )
+function unsafe_write( rec::RecordFlexible, p::Ptr{UInt8}, n::UInt )
    nwritten = 0
    while (n>0)
       if rec.totleft==0; error("attempting to write beyond record end"); end
@@ -105,7 +95,7 @@ function unsafe_write( rec::RecordVariableLength, p::Ptr{UInt8}, n::UInt )
    return nwritten
 end
 
-function close( rec::RecordVariableLength )
+function close( rec::RecordFlexible )
    if rec.writable
       @assert rec.totleft == 0
       @assert rec.subleft == 0

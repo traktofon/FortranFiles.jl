@@ -5,6 +5,6 @@ immutable FortranFile{R<:RecordType}
    rectype :: R
 end
 
-FortranFile(fn::String, rt::RecordType, mode="r") = FortranFile(open(fn,mode), rt)
+FortranFile(fn::String, mode = "r", rt::RecordType = RECFL) = FortranFile(open(fn,mode), rt)
 
 close(f::FortranFile) = close(f.io)
