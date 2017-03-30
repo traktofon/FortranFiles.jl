@@ -1,0 +1,21 @@
+#!/usr/bin/perl -w
+# vim: set ts=4 sw=4 expandtab :
+
+use strict;
+
+my %vars;
+my ($var,$text);
+while (my $arg = shift) {
+    if (not $arg =~ /^(\w+)=(.*)$/) {
+        die "$arg is not key=val"
+    }
+    $var = "#".$1."#";
+    $text = $2;
+    $vars{$var} = $text;
+}
+while (my $line = <>) {
+    while ( ($var,$text) = each %vars ) {
+        $line =~ s/$var/$text/g;
+    }
+    print $line;
+}
