@@ -9,6 +9,11 @@ function write( f::FortranFile, vars... )
    return written
 end
 
+# workaround for "does not support byte I/O"
+function write( rec::Record, var::Int8 )
+   write( rec, [var] )
+end
+
 check_fortran_type{T}(x::Array{T}) = check_fortran_type(x[1])
 check_fortran_type(x::FString) = true
 check_fortran_type{T}(x::T) = isbits(T)

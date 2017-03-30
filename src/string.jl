@@ -1,4 +1,4 @@
-import Base: sizeof, show, convert, read, write
+import Base: sizeof, print, show, convert, read, write
 
 
 const Fchar = Cchar
@@ -11,7 +11,8 @@ sizeof{N}(::Type{FString{N}}) = N
 sizeof{N}(::FString{N}) = N
 sizeof{N}(a::Array{FString{N}}) = N*length(a)
 
-show{N}(io::IO, ::Type{FString{N}}) = print(io, "FString{$N}")
+print{N}(io::IO, ::Type{FString{N}}) = print(io, "FString{$N}")
+show{N}(io::IO, T::Type{FString{N}}) = print(io, T)
 show{N}(io::IO, s::FString{N}) = begin print(io, "FString($N,"); show(io, trimstring(s)); print(io, ")") end
 
 function convert{N}(::Type{FString{N}}, s::String)

@@ -16,6 +16,12 @@ function read( f::FortranFile, specs... )
 end
 
 
+# workaround for "does not support byte I/O"
+function read_spec( io::Record, spec::Type{Int8} )
+   b = read_spec(io, (Int8,1))
+   return b[1]
+end
+
 function read_spec{T}( io::Record, spec::Type{T} )
    read(io, spec)::T
 end
