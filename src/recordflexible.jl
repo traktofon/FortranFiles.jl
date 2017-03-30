@@ -103,6 +103,7 @@ function close( rec::RecordFlexible )
    else
       while rec.subleft > 0
          skip(rec.io, rec.subleft)
+         rec.subleft = 0
          advance!(rec)
       end
       @assert !rec.more

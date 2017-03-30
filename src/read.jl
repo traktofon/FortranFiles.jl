@@ -25,14 +25,15 @@ function read_spec{I<:Integer}( io::Record, spec::Tuple{DataType,I} )
    read(io, T, n)::Array{T,1}
 end
 
-function read_spec{I<:Integer,N}( io::Record, spec::Tuple{DataType, Vararg{I,N}} )
+function read_spec{N}( io::Record, spec::Tuple{DataType, Vararg{Integer,N}} )
    T = spec[1]
-   sz = spec[2:end]
-   read(io, T, sz)::Array{T,N}
+   szi = map(Int, spec[2:end])
+   read(io, T, szi)::Array{T,N}
 end
 
-function read_spec{I<:Integer,N}( io::Record, spec::Tuple{DataType, Tuple{Vararg{I,N}}} )
+function read_spec{N}( io::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} )
    T,sz = spec
-   read(io, T, sz)::Array{T,N}
+   szi = map(Int, sz)
+   read(io, T, szi)::Array{T,N}
 end
 
