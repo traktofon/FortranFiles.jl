@@ -9,11 +9,11 @@ const typeinfo = [
       ( "c16", "complex(kind=dp)", "(1.d0,0.d0)" ),
       ( "str", "character(len=*)", "'1'" ) ]
 
-function genrandutil()
+function genrandom()
    for (name, ftype, code) in typeinfo
       cmd = `./ftl-expand name=$name type=$ftype code=$code`
-      run(pipeline(cmd, stdin="randutil.ftl", stdout="randutil$(name).f90"))
+      run(pipeline(cmd, stdin="random.ftl", stdout="random$(name).f90"))
    end
 end
 
-genrandutil()
+genrandom()

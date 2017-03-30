@@ -2,15 +2,15 @@ program gendata
 
    use,intrinsic :: iso_fortran_env
 
-   use :: randutili1
-   use :: randutili2
-   use :: randutili4
-   use :: randutili8
-   use :: randutilr4
-   use :: randutilr8
-   use :: randutilc8
-   use :: randutilc16
-   use :: randutilstr
+   use :: randomi1
+   use :: randomi2
+   use :: randomi4
+   use :: randomi8
+   use :: randomr4
+   use :: randomr8
+   use :: randomc8
+   use :: randomc16
+   use :: randomstr
 
    implicit none
 
@@ -20,7 +20,7 @@ program gendata
    integer :: lun
 #include "fdecl.f90"
 
-   open(newunit=lun, file="test.bin", form="unformatted", status="unknown")
+   open(newunit=lun, file="data.bin", form="unformatted", status="unknown")
 #include "fwrite.f90"
    close(lun)
 

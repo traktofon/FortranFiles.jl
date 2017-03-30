@@ -1,4 +1,4 @@
-module randutil#name#
+module random#name#
 
    use,intrinsic :: iso_fortran_env
 
@@ -54,6 +54,6 @@ contains
       end do
    end
 
-end module randutil#name#
+end module random#name#
 
 ! vim: set syntax=fortran ts=3 sw=3 expandtab :
