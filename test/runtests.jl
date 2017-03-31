@@ -1,17 +1,53 @@
 using FortranFiles
 using Base.Test
 
-const RECSF = FortranFiles.RecordTypeFlexible(2^15-9)
+include("common.jl")
 
-recordtypes = [
-   (REC32, "32", "simple 4-byte"),
-   (REC64, "64", "simple 8-byte"),
-   (RECFL, "FL", "flexible 4-byte"),
-   (RECSF, "SF", "short flexible 4-byte") ]
+include("codegen/jread.jl")
+include("codegen/jskip.jl")
+include("codegen/jwrite.jl")
 
-@testset "Tests with $(rectyp) records" for (rectyp, tag, desc) in recordtypes
-   infilename  = "data$(tag).bin"
-   outfilename = "check$(tag).bin"
-   infile  = FortranFile(infilename,  "r", rectyp)
-   outfile = FortranFile(outfilename, "w", rectyp)
+function cmpfiles(a::String, b::String)
+   cmd = `cmp $a $b`
+   try
+      run(cmd)
+      return true
+   catch
+      return false
+   end
 end
+
+
+@testset "Tests with $(test.rectype) record markers" for test in recordtype_tests
+
+   local infile, outfile, data
+   infilename  = "data$(test.tag).bin"
+   outfilename = "chck$(test.tag).bin"
+
+   @testset "Opening files" begin
+      infile  = FortranFile(infilename,  "r", test.rectype)
+      @test infile.rectype == test.rectype
+      outfile = FortranFile(outfilename, "w", test.rectype)
+      @test outfile.rectype == test.rectype
+   end
+
+   @time @testset "Reading data" begin
+      data = readdata(infile)
+   end
+
+   @time @testset "Reading data with skipping" begin
+      rewind(infile)
+      skipdata(infile)
+      close(infile)
+   end
+
+   @time @testset "Writing data" begin
+      writedata(outfile, data)
+      close(outfile)
+   end
+
+   @testset "Verifying data" begin
+      @test cmpfiles(infilename, outfilename)
+   end
+
+end;

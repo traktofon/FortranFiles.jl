@@ -1,6 +1,7 @@
 module random#name#
 
    use,intrinsic :: iso_fortran_env
+   use :: randutil
 
    implicit none
    private
@@ -21,7 +22,7 @@ contains
 
    subroutine random0(x)
       #type#, intent(out) :: x
-      x = #code#
+      call #func#(x)
    end
 
    subroutine random1(arr)

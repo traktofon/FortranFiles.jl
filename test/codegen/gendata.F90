@@ -17,10 +17,18 @@ program gendata
    integer,parameter :: sp = REAL32
    integer,parameter :: dp = REAL64
 
-   integer :: lun
+   character(len=80) :: filename
+   integer           :: lun, argc
 #include "fdecl.f90"
 
-   open(newunit=lun, file="data.bin", form="unformatted", status="unknown")
+   argc = command_argument_count()
+   if (argc < 1) then
+      filename = "data.bin"
+   else
+      call get_command_argument(1, filename)
+   endif
+
+   open(newunit=lun, file=filename, form="unformatted", status="unknown")
 #include "fwrite.f90"
    close(lun)
 

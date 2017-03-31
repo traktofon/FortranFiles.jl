@@ -1,6 +1,10 @@
 import FortranFiles: FString
 import Base: size
 
+const nscalar = 5
+const narray  = 3
+const nstrlen = 3
+
 immutable CodegenTask
    jtype :: DataType
    ftype :: String
@@ -8,7 +12,7 @@ immutable CodegenTask
    var   :: String
 end
 
-# size(task::CodegenTask) = sizeof(task.jtype) * prod(task.sz)
+size(task::CodegenTask) = sizeof(task.jtype) * prod(task.sz)
 
 function fdecl(task::CodegenTask)
    if task.sz == (1,)
@@ -37,17 +41,23 @@ function fwrdata(tasks::Vector{CodegenTask})
 end
 
 function jwrdata(tasks::Vector{CodegenTask})
-   vars = join((task.var for task in tasks), ", ")
-   code = "write(outfile, $(vars))"
-   return code
+   vars   = join((task.var for task in tasks), ", ")
+   nbytes = sum(size(task) for task in tasks)
+   codes  = [ "$(vars) = shift!(data)",
+              "nwritten = write(f, $(vars))",
+              "@test nwritten == $(nbytes)" ]
+   return codes
 end
 
 function jrddata(tasks::Vector{CodegenTask})
-   if isempty(tasks); return "read(infile)"; end
-   vars = join((task.var for task in tasks), ", ")
+   if isempty(tasks)
+      return [ "read(f)" ]
+   end
    specs = String[]
+   tests = String[]
    for task in tasks
       spec = "$(task.jtype)"
+      typ  = "$(task.jtype)"
       if task.sz != (1,)
          dims = join( ("$dim" for dim in task.sz), "," )
          if rand(Bool)
@@ -55,12 +65,19 @@ function jrddata(tasks::Vector{CodegenTask})
          else
             spec = "($spec, ($(dims)))"
          end
+         typ = "Array{$(typ),$(length(task.sz))}"
       end
       push!(specs, spec)
+      push!(tests, "@test typeof($(task.var)) == $(typ)")
+      push!(tests, "@test sizeof($(task.var)) == $(size(task))")
    end
+   vars = join((task.var for task in tasks), ", ")
+   vartup = (length(tasks)==1) ? vars : "($(vars))"
    specstr = join(specs, ", ")
-   code = "$(vars) = read(infile, $(specstr))"
-   return code
+   codes = [ "$(vars) = read(f, $(specstr))",
+             tests...,
+             "push!(data, $(vartup))" ]
+   return codes
 end
 
 
@@ -77,13 +94,13 @@ function gencode(seed)
       ( Complex64,  "complex(kind=sp)" ),
       ( Complex128, "complex(kind=dp)" ) ]
    strtypes = [
-      ( FString{n}, "character(len=$n)" ) for n in rand(1:200,5) ]
+      ( FString{n}, "character(len=$n)" ) for n in rand(1:200,nstrlen) ]
    types = vcat(numtypes, strtypes)
 
-   dims0 = [ ( 1, ) for i=1:10 ]
-   dims1 = [ ( rand(1:10_000), ) for i=1:10 ]
-   dims2 = [ ( rand(1:100), rand(1:100) ) for i=1:10 ]
-   dims3 = [ ( rand(1:10), rand(1:10), rand(1:10) ) for i=1:10 ]
+   dims0 = [ ( 1, ) for i=1:nscalar ]
+   dims1 = [ ( rand(1:10_000), ) for i=1:narray ]
+   dims2 = [ ( rand(1:100), rand(1:100) ) for i=1:narray ]
+   dims3 = [ ( rand(1:10), rand(1:10), rand(1:10) ) for i=1:narray ]
    dims  = vcat(dims0, dims1, dims2, dims3)
 
    fdeclf = open("fdecl.f90", "w")
@@ -91,6 +108,9 @@ function gencode(seed)
    jwrf = open("jwrite.jl", "w")
    jrdf = open("jread.jl", "w")
    jskf = open("jskip.jl", "w")
+   print(jwrf, "function writedata(f::FortranFile, data)\n")
+   print(jrdf, "function readdata(f::FortranFile)\n   data = Any[]\n")
+   print(jskf, "function skipdata(f::FortranFile)\n   data = Any[]\n")
 
    tasks = CodegenTask[]
    itask = 1
@@ -118,17 +138,18 @@ function gencode(seed)
 
    for tg in taskgroups
       println(fwrf, "   ", fwrdata(tg))
-      println(jwrf, "   ", jwrdata(tg))
-      println(jrdf, "   ", jrddata(tg))
-      println(jskf, "   ", jrddata(tg[1:rand(0:end)]))
+      for line in jwrdata(tg); println(jwrf, "   ", line); end
+      for line in jrddata(tg); println(jrdf, "   ", line); end
+      for line in jrddata(tg[1:rand(0:end-1)]); println(jskf, "   ", line); end
    end
 
+   print(jwrf, "end\n")
+   print(jrdf, "   return data\nend\n")
+   print(jskf, "   return data\nend\n")
    close(fwrf)
    close(jwrf)
    close(jrdf)
    close(jskf)
-
-   taskgroups
 end
 
 
