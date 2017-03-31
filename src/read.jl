@@ -26,20 +26,23 @@ function read_spec{T}( io::Record, spec::Type{T} )
    read(io, spec)::T
 end
 
+function read_spec{T,N}( io::Record, spec::Array{T,N} )
+   read!(io, spec)::Array{T,N}
+end
+
 function read_spec{I<:Integer}( io::Record, spec::Tuple{DataType,I} )
    T,n = spec
-   read(io, T, n)::Array{T,1}
+   read!(io, Array{T}(n))::Array{T,1}
 end
 
 function read_spec{N}( io::Record, spec::Tuple{DataType, Vararg{Integer,N}} )
    T = spec[1]
-   szi = map(Int, spec[2:end])
-   read(io, T, szi)::Array{T,N}
+   sz = spec[2:end]
+   read!(io, Array{T}(sz))::Array{T,N}
 end
 
 function read_spec{N}( io::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} )
    T,sz = spec
-   szi = map(Int, sz)
-   read(io, T, szi)::Array{T,N}
+   read!(io, Array{T}(sz))::Array{T,N}
 end
 

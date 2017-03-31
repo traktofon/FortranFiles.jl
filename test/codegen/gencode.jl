@@ -60,10 +60,15 @@ function jrddata(tasks::Vector{CodegenTask})
       typ  = "$(task.jtype)"
       if task.sz != (1,)
          dims = join( ("$dim" for dim in task.sz), "," )
-         if rand(Bool)
+         specsyntax = rand([:array, :short, :shorter])
+         if specsyntax == :array
+            spec = "Array{$(typ)}($(dims))"
+         elseif specsyntax == :short
+            spec = "($spec, ($(dims)))"
+         elseif specsyntax == :shorter
             spec = "($spec, $(dims))"
          else
-            spec = "($spec, ($(dims)))"
+            error("can't happen")
          end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
