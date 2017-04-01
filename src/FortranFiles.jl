@@ -3,7 +3,7 @@ module FortranFiles
 using Compat
 
 export FortranFile, rewind
-export RECMRK32, RECMRK64, RECMRKFL
+export RECMRK32, RECMRK64, RECMRKFL, RECMRKDEF
 export FString, trimstring
 
 include("recordtypes.jl")

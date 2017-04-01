@@ -4,6 +4,7 @@ import Base: size
 const nscalar = 5
 const narray  = 3
 const nstrlen = 3
+# will generate (8+nstrlen)*(nscalar+3*narray) CodegenTasks
 
 immutable CodegenTask
    jtype :: DataType
