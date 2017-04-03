@@ -18,6 +18,23 @@ function cmpfiles(a::String, b::String)
 end
 
 
+@testset "Strings" begin
+   jstr = "Hello World!"
+   N    = length(jstr)
+   fstr = FString(N, jstr)
+   @test typeof(fstr) == FString{N}
+   @test trimstring(fstr) == jstr
+   fstr = FString(80, jstr)
+   @test typeof(fstr) == FString{80}
+   @test trimstring(fstr) == jstr
+   fstr = FString(8, jstr)
+   @test typeof(fstr) == FString{8}
+   @test trimstring(fstr) == jstr[1:8]
+   jstr = "Hällo Wörld!"
+   @test_throws InexactError FString(80, jstr)
+end
+
+
 @testset "Tests with record markers of $(test.desc)" for test in recmrktyp_tests
 
    local infile, outfile, data

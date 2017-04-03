@@ -1,11 +1,6 @@
 import FortranFiles: FString
 import Base: size
 
-const nscalar = 5
-const narray  = 3
-const nstrlen = 3
-# will generate (8+nstrlen)*(nscalar+3*narray) CodegenTasks
-
 immutable CodegenTask
    jtype :: DataType
    ftype :: String
@@ -87,7 +82,8 @@ function jrddata(tasks::Vector{CodegenTask})
 end
 
 
-function gencode(seed)
+function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
+# will generate (8+nstrlen)*(nscalar+3*narray) CodegenTasks
    srand(seed)
 
    numtypes = [
@@ -159,5 +155,5 @@ function gencode(seed)
 end
 
 
-gencode(12345678)
+gencode(1,1,1,seed=12345678)
 
