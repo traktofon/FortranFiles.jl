@@ -25,7 +25,7 @@ program gendata
       call get_command_argument(1, filename)
    endif
 
-   open(newunit=lun, file=filename, form="unformatted", status="unknown")
+   open(newunit=lun, file=filename, form="unformatted", action="write", status="replace")
 #include "fwrite.f90"
    close(lun)
 
