@@ -15,9 +15,6 @@ module random#name#
       module procedure random3
    end interface random
 
-   integer,parameter :: sp = REAL32
-   integer,parameter :: dp = REAL64
-
 contains
 
    subroutine random0(x)

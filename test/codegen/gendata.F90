@@ -14,9 +14,6 @@ program gendata
 
    implicit none
 
-   integer,parameter :: sp = REAL32
-   integer,parameter :: dp = REAL64
-
    character(len=80) :: filename
    integer           :: lun, argc
 #include "fdecl.f90"

@@ -1,0 +1,6 @@
+# Writing Data
+
+```@docs
+write
+```
+

@@ -14,6 +14,7 @@ Wrap the given `IO` stream as a `FortranFile` containing Fortran "unformatted"
 * `access` for specifying the access mode; a `String` being one of
   * "sequential": sequential access as in Fortran, where records have leading
     and trailing record markers. This is the default.
+  * [nothing else at the moment]
 * `marker`: for specifying the type of record marker; one of
   * `RECMRK4B`: 4-byte record markers (with support for subrecords) [default]
   * `RECMRK8B`: 8-byte record markers
@@ -41,7 +42,7 @@ arguments are as in `FortranFile(io::IO; kwargs...)`.
 FortranFile(fn::String, mode = "r"; kwargs...) = FortranFile(open(fn,mode); kwargs...)
 
 
-"Re-position a FortranFile at its beginning."
+"Re-position a `FortranFile` at its beginning."
 rewind(f::FortranFile) = seek(f.io, 0)
 
 
