@@ -1,22 +1,23 @@
 using FortranFiles
 
 # To test long records being split into subrecords, without needing
-# test data files of several GB, define a custom RecordType with a
-# short maximum subrecord length
+# test data files of several GB, define a custom RecordMarkerType with
+# a short maximum subrecord length
 const maxsubreclen = 2^15 - 9
-const RECMRKSF = FortranFiles.RecordTypeFlexible(maxsubreclen)
+const RECMRK4Bwssr = FortranFiles.WithSubrecords(maxsubreclen)
+const RECMRK4Bwosr = FortranFiles.WithoutSubrecords{Int32}()
 
-immutable RecordTypeTest
-   rectype :: FortranFiles.RecordType
-   desc    :: String
-   tag     :: String
-   fflags  :: String
+immutable RecordMarkerTypeTest
+   recmrktyp :: FortranFiles.RecordMarkerType
+   desc      :: String
+   tag       :: String
+   fflags    :: String
 end
 
-const recordtype_tests = [
-   RecordTypeTest( RECMRKSF, "short smart 4-byte", "SF", "-fmax-subrecord-length=$(maxsubreclen)" ),
-   RecordTypeTest( RECMRKFL, "smart 4-byte", "FL", "" ),
-   RecordTypeTest( RECMRK64, "dumb 8-byte", "64", "-frecord-marker=8" ),
-   RecordTypeTest( RECMRK32, "dumb 4-byte", "32", "" )
+const recmrktyp_tests = [
+   RecordMarkerTypeTest( RECMRK4Bwssr, "4-byte with short subrecords",   "4Bshort", "-fmax-subrecord-length=$(maxsubreclen)" ),
+   RecordMarkerTypeTest( RECMRK4B,     "4-byte with default subrecords", "4Bdef",   "" ),
+   RecordMarkerTypeTest( RECMRK8B,     "8-byte without subrecords",      "8B",      "-frecord-marker=8" ),
+   RecordMarkerTypeTest( RECMRK4Bwosr, "4-byte without subrecords",      "4Bdumb",  "" )
    ]
 

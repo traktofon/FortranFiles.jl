@@ -18,17 +18,17 @@ function cmpfiles(a::String, b::String)
 end
 
 
-@testset "Tests with $(test.rectype) record markers" for test in recordtype_tests
+@testset "Tests with record markers of $(test.desc)" for test in recmrktyp_tests
 
    local infile, outfile, data
    infilename  = "data$(test.tag).bin"
    outfilename = "chck$(test.tag).bin"
 
    @testset "Opening files" begin
-      infile  = FortranFile(infilename,  "r", test.rectype)
-      @test infile.rectype == test.rectype
-      outfile = FortranFile(outfilename, "w", test.rectype)
-      @test outfile.rectype == test.rectype
+      infile  = FortranFile(infilename, "r", marker = test.recmrktyp)
+      @test infile.acctyp.recmrktyp == test.recmrktyp
+      outfile = FortranFile(outfilename, "w", marker = test.recmrktyp)
+      @test outfile.acctyp.recmrktyp == test.recmrktyp
    end
 
    @time @testset "Reading data" begin

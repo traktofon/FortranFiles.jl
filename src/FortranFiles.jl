@@ -3,13 +3,13 @@ module FortranFiles
 using Compat
 
 export FortranFile, rewind
-export RECMRK32, RECMRK64, RECMRKFL, RECMRKDEF
+export RECMRK4B, RECMRK8B
 export FString, trimstring
 
-include("recordtypes.jl")
+include("types.jl")
 include("file.jl")
-include("recordsimple.jl")
-include("recordflexible.jl")
+include("withoutsubrecords.jl")
+include("withsubrecords.jl")
 include("string.jl")
 include("read.jl")
 include("write.jl")

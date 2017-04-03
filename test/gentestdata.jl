@@ -14,4 +14,4 @@ function genalldata(tests)
    return nothing
 end
 
-genalldata(recordtype_tests)
+genalldata(recmrktyp_tests)
