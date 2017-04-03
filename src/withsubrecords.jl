@@ -79,9 +79,10 @@ function unsafe_write( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
       rec.totleft -= towrite
       if rec.subleft==0
          # the current subrecord is full
-         # write trailing subrecord marker
-         wrmarker(rec.io, rec.subreclen, !rec.isfirst)
+         # if there are more subrecords, write the record markers
          if rec.more
+            # write trailing subrecord marker
+            wrmarker(rec.io, rec.subreclen, !rec.isfirst)
             # write leading subrecord marker
             subreclen, more = mkmarker(rec.totleft, rec.maxsrlen)
             wrmarker(rec.io, subreclen, more)
@@ -100,6 +101,7 @@ function close( rec::RecordWithSubrecords )
       @assert rec.totleft == 0
       @assert rec.subleft == 0
       @assert !rec.more
+      wrmarker(rec.io, rec.subreclen, !rec.isfirst)
    else
       while rec.subleft > 0
          skip(rec.io, rec.subleft)

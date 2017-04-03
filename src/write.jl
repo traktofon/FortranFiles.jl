@@ -1,5 +1,20 @@
 import Base: write
 
+"""
+    write(f::FortranFile, items...)
+
+Write a data record to a `FortranFile`. Each `item` should be a scalar
+of a Fortran-compatible datatype (e.g. `Int32`, `Float64`, `FString{10}`),
+or an array of such scalars. If no `item`s are given, an empty record is
+written. Returns the number of bytes written, **not** including the space
+taken up by the record markers.
+"""
+function write( f::FortranFile )
+   rec = Record(f, 0)
+   close(rec)
+   return 0
+end
+
 function write( f::FortranFile, vars... )
    # how much data to write?
    towrite = sum( sizeof_var(var) for var in vars )
