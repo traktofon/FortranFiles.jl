@@ -20,6 +20,7 @@ sizeof{N}(a::Array{FString{N}}) = N*length(a)
 
 print{N}(io::IO, ::Type{FString{N}}) = print(io, "FString{$N}")
 show{N}(io::IO, T::Type{FString{N}}) = print(io, T)
+print{N}(io::IO, s::FString{N}) = print(io, trimstring(s))
 show{N}(io::IO, s::FString{N}) = begin print(io, "FString($N,"); show(io, trimstring(s)); print(io, ")") end
 
 function convert{N}(::Type{FString{N}}, s::String)

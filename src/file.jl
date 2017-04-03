@@ -1,4 +1,4 @@
-import Base: close
+import Base: close, show
 
 immutable FortranFile{A<:AccessMode}
    io     :: IO    # the underyling I/O stream
@@ -46,4 +46,12 @@ rewind(f::FortranFile) = seek(f.io, 0)
 
 
 close(f::FortranFile) = close(f.io)
+
+
+function show(io::IO, f::FortranFile)
+   print(io, "FortranFile(")
+   show(io, f.io)
+   print(io, "), ")
+   show(io, f.acctyp)
+end
 
