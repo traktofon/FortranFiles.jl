@@ -5,12 +5,12 @@ makedocs(
    format   = :html,
    sitename = "FortranFiles.jl",
    pages = [
-      "Home" => "home.md",
+      "Home" => "index.md",
       "files.md",
       "types.md",
       "read.md",
       "write.md",
-      "index.md"
+      "Index" => "theindex.md"
    ]
 )
 
