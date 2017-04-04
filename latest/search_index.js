@@ -1,7 +1,7 @@
 var documenterSearchIndex = {"docs": [
 
 {
-    "location": "home.html#",
+    "location": "index.html#",
     "page": "Home",
     "title": "Home",
     "category": "page",
@@ -9,7 +9,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "home.html#FortranFiles.jl-1",
+    "location": "index.html#FortranFiles.jl-1",
     "page": "Home",
     "title": "FortranFiles.jl",
     "category": "section",
@@ -17,7 +17,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "home.html#Features-1",
+    "location": "index.html#Features-1",
     "page": "Home",
     "title": "Features",
     "category": "section",
@@ -25,11 +25,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "home.html#Documentation-1",
+    "location": "index.html#Documentation-1",
     "page": "Home",
     "title": "Documentation",
     "category": "section",
-    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"index.md\"\n]"
+    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"theindex.md\"\n]"
 },
 
 {
@@ -329,7 +329,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#",
+    "location": "theindex.html#",
     "page": "Index",
     "title": "Index",
     "category": "page",
@@ -337,7 +337,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Index-1",
+    "location": "theindex.html#Index-1",
     "page": "Index",
     "title": "Index",
     "category": "section",
