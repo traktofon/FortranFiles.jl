@@ -26,7 +26,9 @@ script:
 # - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd()); Pkg.build("FortranFiles"); Pkg.test("FortranFiles"; coverage=true)'
 
-#after_success:
+after_success:
+  - julia -e 'Pkg.add("Documenter")'
+  - julia -e 'cd(Pkg.dir("FortranFiles")); include(joinpath("docs", "make.jl"))'
 #  # push coverage results to Coveralls
 #  - julia -e 'cd(Pkg.dir("FortranFiles")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
 #  # push coverage results to Codecov

@@ -13,3 +13,12 @@ makedocs(
       "index.md"
    ]
 )
+
+deploydocs(
+   repo   = "github.com/traktofon/FortranFiles.jl.git",
+   target = "build",
+   branch = "gh-pages",
+   julia  = "release",
+   deps   = nothing,
+   make   = nothing
+)

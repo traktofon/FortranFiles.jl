@@ -3,4 +3,4 @@
 *.jl.mem
 test/codegen/*
 test/*.bin
-docs/build/*
+docs/build/
