@@ -2,9 +2,17 @@
 
 A Julia package for reading/writing Fortran unformatted (i.e. binary) files.
 
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://traktofon.github.io/FortranFiles.jl/latest/)
 [![Build Status](https://travis-ci.org/traktofon/FortranFiles.jl.svg?branch=master)](https://travis-ci.org/traktofon/FortranFiles.jl)
 
 ## Quickstart ##
+
+Full documentation is available at <https://traktofon.github.io/FortranFiles.jl/latest/>.
+
+Installation:
+```julia
+Pkg.clone("https://github.com/traktofon/FortranFiles.jl.git")
+```
 
 Example usage for reading files:
 ```julia
@@ -62,29 +70,9 @@ write(f, i, x, A, s)
 close(f)
 ```
 
-Full documentation: TODO
-
-
-## Supported Features ##
-
-* Sequential Access mode
-  * 4-byte record markers, with subrecord support (allowing records larger than 2 GiB)
-  * 8-byte record markers (used by early versions of gfortran)
-* Most standard Fortran datatypes, including arrays and strings
-* "Inhomogeneous" records, i.e. records made from multiple different datatypes
-
-
-## Unsupported Features ##
-
-* Direct Access mode
-* Derived Type I/O
-* Equivalents of BACKSPACE and ENDFILE
-
 
 ## TODO ##
 
-* Documentation
-* How to support Fortran's LOGICAL type? Is there a standard binary presentation?
 * Figure out how this stuff works:
         [![Coverage Status](https://coveralls.io/repos/traktofon/FortranFiles.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/traktofon/FortranFiles.jl?branch=master)
         [![codecov.io](http://codecov.io/github/traktofon/FortranFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/traktofon/FortranFiles.jl?branch=master)
