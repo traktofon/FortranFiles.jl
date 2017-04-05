@@ -28,6 +28,7 @@ Pages = [
    "types.md",
    "read.md",
    "write.md",
+   "tests.md",
    "theindex.md"
 ]
 ```

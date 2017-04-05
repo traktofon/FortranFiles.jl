@@ -9,6 +9,7 @@ Pages = [
    "files.md",
    "types.md",
    "read.md",
-   "write.md"
+   "write.md",
+   "tests.md"
 ]
 ```
