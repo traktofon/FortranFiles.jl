@@ -62,11 +62,11 @@ end
 function read_spec{N}( io::Record, spec::Tuple{DataType, Vararg{Integer,N}} )
    T = spec[1]
    sz = spec[2:end]
-   read!(io, Array{T}(sz))::Array{T,N}
+   read!(io, Array{T}(sz...))::Array{T,N}
 end
 
 function read_spec{N}( io::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} )
    T,sz = spec
-   read!(io, Array{T}(sz))::Array{T,N}
+   read!(io, Array{T}(sz...))::Array{T,N}
 end
 

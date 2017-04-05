@@ -56,15 +56,11 @@ function jrddata(tasks::Vector{CodegenTask})
       typ  = "$(task.jtype)"
       if task.sz != (1,)
          dims = join( ("$dim" for dim in task.sz), "," )
-         specsyntax = rand([:array, :short, :shorter])
-         if specsyntax == :array
-            spec = "Array{$(typ)}($(dims))"
-         elseif specsyntax == :short
-            spec = "($spec, ($(dims)))"
-         elseif specsyntax == :shorter
-            spec = "($spec, $(dims))"
+         mixdims = join( ( rand(["$dim", "Int64($dim)", "Int32($dim)", "Int16($dim)"]) for dim in task.sz), "," )
+         if length(task.sz) == 1
+            spec = rand([ "Array{$(typ)}($(dims))", "($spec, $(mixdims))" ])
          else
-            error("can't happen")
+            spec = rand([ "Array{$(typ)}($(dims))", "($spec, $(mixdims))", "($spec, ($(mixdims)))" ])
          end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
@@ -155,5 +151,5 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
 end
 
 
-gencode(1,1,1,seed=12345678)
+gencode(3,2,2,seed=12345678)
 
