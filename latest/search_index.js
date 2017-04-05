@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Documentation",
     "category": "section",
-    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"theindex.md\"\n]"
+    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"tests.md\",\n   \"theindex.md\"\n]"
 },
 
 {
@@ -329,6 +329,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tests.html#",
+    "page": "Package Tests",
+    "title": "Package Tests",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tests.html#Package-Tests-1",
+    "page": "Package Tests",
+    "title": "Package Tests",
+    "category": "section",
+    "text": "This package can be tested in the usual Julia way:Pkg.test(\"FortranFiles\")However, in order to test whether files written by a Fortran program are properly read, this first needs to generate some Fortran output. Therefore the following external dependencies are required to run the tests:gfortran (a reasonably recent version, which understands the -std=f2008 flag)\nGNU make\nPerlThe tests perform the following steps:Create the Fortran source code, and compile it.\nCreate the Julia source code for reading the Fortran data, and for writing it out again.\nRun the Fortran program. This produces the input test data.\nUse the Julia code to read in the test data. Datatype and storage size of the read items are checked against their expected values.\nUse the Julia code to read parts of the test data, i.e. records are skipped or read incompletely.\nUse the Julia code to write the data to an output file.\nCheck that the input and output file are identical.This sequence of steps is performed for each of the tested record marker types, using the appropriate gfortran compiler options to adjust the Fortran output."
+},
+
+{
     "location": "theindex.html#",
     "page": "Index",
     "title": "Index",
@@ -341,7 +357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Index",
     "title": "Index",
     "category": "section",
-    "text": "CurrentModule = FortranFilesPages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\"\n]"
+    "text": "CurrentModule = FortranFilesPages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"tests.md\"\n]"
 },
 
 ]}
