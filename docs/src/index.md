@@ -33,3 +33,11 @@ Pages = [
 ]
 ```
 
+## Acknowledgments
+
+The `FortranFiles.jl` logo has been produced with help of the
+[Virtual Keypunch service](http://www.masswerk.at/keypunch/)
+from [masswerk.at](http://www.masswerk.at/).
+The punchcard artwork is Copyright 2012 Norbert Landsteiner, mass:werk – media environments.
+It is here used by kind permission.
+

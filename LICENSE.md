@@ -20,3 +20,16 @@ The FortranFiles.jl package is licensed under the MIT "Expat" License:
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 > 
+
+----
+
+The `FortranFiles.jl` logo (path: docs/src/assets/logo.png)
+has been produced with help of the
+[Virtual Keypunch service](http://www.masswerk.at/keypunch/)
+from [masswerk.at](http://www.masswerk.at/).
+The punchcard artwork is here used by kind permission of Norbert Landsteiner.
+Original copyright notice for the punchcard artwork:
+
+> Copyright 2012 Norbert Landsteiner, mass:werk – media environments.
+> All rights reserved. No copying, no unauthorized providing or hosting.
+
