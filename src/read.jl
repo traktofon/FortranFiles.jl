@@ -34,11 +34,10 @@ end
 
 function read( f::FortranFile, specs... )
    rec = Record(f)
-   data = [ read_spec(rec,spec) for spec in specs ]
+   data = map( spec->read_spec(rec,spec), specs)
    close(rec)
-   return tuple(data...)
+   return data
 end
-
 
 # workaround for "does not support byte I/O"
 function read_spec( io::Record, spec::Type{Int8} )
