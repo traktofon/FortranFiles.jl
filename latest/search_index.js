@@ -33,6 +33,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Acknowledgments-1",
+    "page": "Home",
+    "title": "Acknowledgments",
+    "category": "section",
+    "text": "The FortranFiles.jl logo has been produced with help of the Virtual Keypunch service from masswerk.at. The punchcard artwork is Copyright 2012 Norbert Landsteiner, mass:werk – media environments. It is here used by kind permission."
+},
+
+{
     "location": "files.html#",
     "page": "Files",
     "title": "Files",
