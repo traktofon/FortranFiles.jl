@@ -13,7 +13,7 @@ Full documentation is available at <https://traktofon.github.io/FortranFiles.jl/
 
 Installation:
 ```julia
-Pkg.clone("https://github.com/traktofon/FortranFiles.jl.git")
+Pkg.add("FortranFiles")
 ```
 
 Example usage for reading files:
