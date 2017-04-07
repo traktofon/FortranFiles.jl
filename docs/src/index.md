@@ -15,6 +15,7 @@ Currently the following features are implemented and working:
 
 The following features are not (yet) supported:
 
+* Byte-order conversion (little endian ⟷ big endian) 
 * Direct Access mode
 * Derived Type I/O
 * Equivalents of BACKSPACE and ENDFILE
