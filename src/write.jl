@@ -19,14 +19,32 @@ function write( f::FortranFile, vars... )
    # how much data to write?
    towrite = sum( sizeof_var(var) for var in vars )
    rec = Record(f, towrite)
-   written = sum( write(rec,var) for var in vars )
+   written = sum( write_var(rec,var) for var in vars )
    close(rec)
    return written
 end
 
-# workaround for "does not support byte I/O"
-function write( rec::Record, var::Int8 )
-   write( rec, [var] )
+# workarounds for "does not support byte I/O"
+function write_var( rec::Record, var::Int8 )
+   write_var( rec, [var] )
+end
+
+function write_var{N}( rec::Record, arr::Array{Int8,N} )
+   write(rec, arr)
+end
+
+# write scalars
+function write_var{T}( rec::Record, var::T )
+   write( rec, rec.convert.onwrite(var) )
+end
+
+# write arrays
+function write_var{T,N}( rec::Record, arr::Array{T,N} )
+   written = 0
+   for x in arr
+      written += write(rec, rec.convert.onwrite(x))
+   end
+   return written
 end
 
 check_fortran_type{T}(x::Array{T}) = check_fortran_type(x[1])

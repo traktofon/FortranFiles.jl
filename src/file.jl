@@ -1,8 +1,9 @@
 import Base: close, show
 
-immutable FortranFile{A<:AccessMode}
+immutable FortranFile{A<:AccessMode, C<:Conversion}
    io     :: IO    # the underyling I/O stream
    acctyp :: A
+   convert:: C
 end
 
 
@@ -18,14 +19,19 @@ Wrap the given `IO` stream as a `FortranFile` containing Fortran "unformatted"
 * `marker`: for specifying the type of record marker; one of
   * `RECMRK4B`: 4-byte record markers (with support for subrecords) [default]
   * `RECMRK8B`: 8-byte record markers
+* `convert`: for specifying the byte-order of the file data; one of
+  * "native": use the host byte order [default]
+  * "big-endian": use big-endian byte-order
+  * "little-endian": use little-endian byte-order
 
 The returned `FortranFile` can be used with Julia's `read` and `write`
 functions. See their documentation for more information.
 """
-function FortranFile(io::IO; access = "sequential", marker = RECMRKDEF)
+function FortranFile(io::IO; access = "sequential", marker = RECMRKDEF, convert = "native")
+   conv = get_convert(convert)
    if access == "sequential"
       acctyp = SequentialAccess(marker)
-      return FortranFile(io, acctyp)
+      return FortranFile(io, acctyp, conv)
    else
       error("unsupported access mode \"$(access)\"")
    end
@@ -52,7 +58,7 @@ close(f::FortranFile) = close(f.io)
 function show(io::IO, f::FortranFile)
    print(io, "FortranFile(")
    show(io, f.io)
-   print(io, "), ")
+   print(io, "), $(f.convert.name) byte order, ")
    show(io, f.acctyp)
 end
 

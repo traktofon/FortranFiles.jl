@@ -1,4 +1,4 @@
-import Base: show
+import Base: show, bswap
 
 @compat abstract type AccessMode end
 @compat abstract type RecordMarkerType end
@@ -23,7 +23,7 @@ show{T}(io::IO, ::WithoutSubrecords{T}) =
 
 
 immutable WithSubrecords <: RecordMarkerType
-   max_subrecord_length :: Int
+   max_subrecord_length :: Int32
 end
 
 const max_subrecord_length = 2^31-9
@@ -33,4 +33,29 @@ const RECMRKDEF = RECMRK4B
 
 show(io::IO, rt::WithSubrecords) =
    print(io, "4-byte record markers, subrecords of max $(rt.max_subrecord_length) bytes")
+
+
+immutable Conversion{R,W}
+   onread  :: R
+   onwrite :: W
+   name    :: String
+end
+
+const converts = [
+   Conversion( identity, identity, "native"        ),
+   Conversion( ntoh    , hton    , "big-endian"    ),
+   Conversion( ltoh    , htol    , "little-endian" )
+   ]
+
+function get_convert(name::String)
+   for conv in converts
+      if conv.name == name
+         return conv
+      end
+   end
+   error("unknown convert method \"$name\"")
+end
+
+# add missing byte-order swapping method
+bswap{T}(z::Complex{T}) = complex(bswap(z.re), bswap(z.im))
 

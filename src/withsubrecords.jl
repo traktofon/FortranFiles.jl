@@ -1,6 +1,6 @@
 import Base: close, unsafe_read, unsafe_write
 
-type RecordWithSubrecords <: Record
+type RecordWithSubrecords{C} <: Record
    io        :: IO      # underlying I/O stream
    maxsrlen  :: Int32   # maximum subrecord length
    subreclen :: Int32   # length of current subrecord
@@ -9,45 +9,50 @@ type RecordWithSubrecords <: Record
    writable  :: Bool    # whether this record is writable
    isfirst   :: Bool    # if writable: whether this is the first subrecord
    totleft   :: Int64   # if writable: bytes left in this record
+   convert   :: C       # convert method
 end
 
-function rdmarker(io)
-   reclen = read(io, Int32)
+function rdmarker(io, fn)
+   reclen = read(io, Int32) |> fn
    more = (reclen < 0)
    return (abs(reclen), more)
 end
+rdmarker(rec::Record) = rdmarker(rec.io, rec.convert.onread)
 
 function mkmarker(towrite, msl)
    subreclen = min(towrite, msl)
    more = (subreclen < towrite)
-   return (subreclen, more)
+   return (Int32(subreclen), more)
 end
 
-function wrmarker(io, subreclen, sign)
+function wrmarker(io, fn, subreclen, sign)
    marker = subreclen * (sign? -1: 1)
-   write(io, convert(Int32, marker))
+   write(io, convert(Int32, marker) |> fn)
 end
+wrmarker(rec::Record, subreclen, sign) = wrmarker(rec.io, rec.convert.onwrite, subreclen, sign)
 
-function Record( f::FortranFile{SequentialAccess{WithSubrecords}} )
+function Record{C}( f::FortranFile{SequentialAccess{WithSubrecords},C} )
 ## constructor for readable records
+   conv = f.convert
    msl = f.acctyp.recmrktyp.max_subrecord_length
-   subreclen, more = rdmarker(f.io)
-   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, false, false, 0)
+   subreclen, more = rdmarker(f.io, conv.onread) # read leading record marker
+   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, false, false, 0, conv)
 end
 
 function Record( f::FortranFile{SequentialAccess{WithSubrecords}}, towrite::Integer )
 ## constructor for writable records
+   conv = f.convert
    msl = f.acctyp.recmrktyp.max_subrecord_length
    subreclen, more = mkmarker(towrite, msl)
-   wrmarker(f.io, subreclen, more)
-   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, true, true, towrite)
+   wrmarker(f.io, conv.onwrite, subreclen, more) # write leading record marker
+   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, true, true, towrite, conv)
 end
 
 function advance!( rec::RecordWithSubrecords )
-   subreclen, sign = rdmarker(rec.io)
+   subreclen, sign = rdmarker(rec) # read trailing record marker
    if subreclen != rec.subreclen; error("trailing subrecord marker doesn't match"); end
    if rec.more
-      subreclen, more = rdmarker(rec.io)
+      subreclen, more = rdmarker(rec) # read next leading subrecord marker
       rec.subleft = rec.subreclen = subreclen
       rec.more = more
    end
@@ -82,10 +87,10 @@ function unsafe_write( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
          # if there are more subrecords, write the record markers
          if rec.more
             # write trailing subrecord marker
-            wrmarker(rec.io, rec.subreclen, !rec.isfirst)
-            # write leading subrecord marker
+            wrmarker(rec, rec.subreclen, !rec.isfirst)
+            # write next leading subrecord marker
             subreclen, more = mkmarker(rec.totleft, rec.maxsrlen)
-            wrmarker(rec.io, subreclen, more)
+            wrmarker(rec, subreclen, more)
             # update our Record
             rec.subleft = rec.subreclen = subreclen
             rec.more = more
@@ -101,7 +106,7 @@ function close( rec::RecordWithSubrecords )
       @assert rec.totleft == 0
       @assert rec.subleft == 0
       @assert !rec.more
-      wrmarker(rec.io, rec.subreclen, !rec.isfirst)
+      wrmarker(rec, rec.subreclen, !rec.isfirst)
    else
       while rec.subleft > 0
          skip(rec.io, rec.subleft)
