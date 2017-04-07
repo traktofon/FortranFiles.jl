@@ -51,7 +51,10 @@ end
 
 function read_spec{T,N}( rec::Record, spec::Array{T,N} )
    arr = read!(rec, spec)::Array{T,N}
+#  println("BEFORE map! ", arr[1])
    map!(rec.convert.onread, arr, arr)
+#  println("AFTER map! ", arr[1])
+   return arr
 end
 
 function read_spec{I<:Integer}( rec::Record, spec::Tuple{DataType,I} )
