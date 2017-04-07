@@ -47,6 +47,12 @@ function write_var{T,N}( rec::Record, arr::Array{T,N} )
    return written
 end
 
+# specialized versions for no byte-order conversion
+write_var{T,N}( rec::RecordWithSubrecords{NOCONV}, arr::Array{T,N} ) = write(rec, arr)
+write_var{N}( rec::RecordWithSubrecords{NOCONV}, arr::Array{Int8,N} ) = write(rec, arr)
+write_var{T,N,R}( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{T,N} ) = write(rec, arr)
+write_var{N,R}( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{Int8,N} ) = write(rec, arr)
+
 check_fortran_type{T}(x::Array{T}) = check_fortran_type(x[1])
 check_fortran_type(x::FString) = true
 check_fortran_type{T}(x::T) = isbits(T)

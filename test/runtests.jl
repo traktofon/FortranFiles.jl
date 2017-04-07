@@ -1,5 +1,6 @@
 using FortranFiles
 using Base.Test
+using Iterators
 
 # To test long records being split into subrecords, without needing
 # test data files of several GB, define a custom RecordMarkerType with
@@ -24,6 +25,20 @@ const recmrktyp_tests = [
    RecordMarkerTypeTest( RECMRK4Bwosr, "4-byte without subrecords",      "4Bdumb",  "" )
    ]
 
+# --- Definition of different byte order conversions ---
+
+immutable ByteOrderTest
+   name   :: String
+   tag    :: String
+   fflags :: String
+end
+
+const byteorder_tests = [
+   ByteOrderTest( "native",        "",   "" ),
+   ByteOrderTest( "little-endian", "LE", "-fconvert=little-endian" ),
+   ByteOrderTest( "big-endian",    "BE", "-fconvert=big-endian" ),
+   ]
+
 # --- Generation of test data and Julia reading/writing code ---
 
 function gendata(tag, fflags)
@@ -33,14 +48,16 @@ function gendata(tag, fflags)
    run(cmd)
 end
 
-function genalldata(tests)
-   for test in tests
-      gendata(test.tag, test.fflags)
+function genalldata(tests...)
+   for test in product(tests...)
+      tag = join( (t.tag for t in test), "_" )
+      fflags = join( (t.fflags for t in test), " " )
+      gendata(tag, fflags)
    end
    return nothing
 end
 
-genalldata(recmrktyp_tests)
+genalldata(recmrktyp_tests, byteorder_tests)
 
 include("codegen/jread.jl")
 include("codegen/jskip.jl")
@@ -76,17 +93,17 @@ end
    @test_throws InexactError FString(80, jstr)
 end
 
-
-@testset "Tests with record markers of $(test.desc)" for test in recmrktyp_tests
+@testset "Tests with record markers of $(test.desc), $(botest.name) byte order" for test in recmrktyp_tests, botest in byteorder_tests
 
    local infile, outfile, data
-   infilename  = "data$(test.tag).bin"
-   outfilename = "chck$(test.tag).bin"
+   tag = "$(test.tag)_$(botest.tag)"
+   infilename  = "data$(tag).bin"
+   outfilename = "chck$(tag).bin"
 
    @testset "Opening files" begin
-      infile  = FortranFile(infilename, "r", marker = test.recmrktyp)
+      infile  = FortranFile(infilename, "r", marker = test.recmrktyp, convert = botest.name)
       @test infile.acctyp.recmrktyp == test.recmrktyp
-      outfile = FortranFile(outfilename, "w", marker = test.recmrktyp)
+      outfile = FortranFile(outfilename, "w", marker = test.recmrktyp, convert = botest.name)
       @test outfile.acctyp.recmrktyp == test.recmrktyp
    end
 

@@ -151,5 +151,5 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
 end
 
 
-gencode(3,2,2,seed=12345678)
+gencode(1,1,2,seed=12345678)
 

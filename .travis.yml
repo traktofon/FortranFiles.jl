@@ -23,6 +23,7 @@ before_install:
 
 script:
 # - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - julia -e 'Pkg.add("Iterators")'
   - julia -e 'Pkg.clone(pwd()); Pkg.build("FortranFiles"); Pkg.test("FortranFiles"; coverage=true)'
 
 after_success:

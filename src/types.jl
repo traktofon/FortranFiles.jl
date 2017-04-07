@@ -47,6 +47,8 @@ const converts = [
    Conversion( ltoh    , htol    , "little-endian" )
    ]
 
+const NOCONV = typeof(converts[1])
+
 function get_convert(name::String)
    for conv in converts
       if conv.name == name
