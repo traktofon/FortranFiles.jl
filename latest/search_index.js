@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Features",
     "category": "section",
-    "text": "Currently the following features are implemented and working:Sequential Access mode\n4-byte record markers, with subrecord support (allowing records larger than 2 GiB)\n8-byte record markers (used by early versions of gfortran)\nMost standard Fortran datatypes, including arrays and strings\n\"Inhomogeneous\" records, i.e. records made from multiple different datatypesThe following features are not (yet) supported:Direct Access mode\nDerived Type I/O\nEquivalents of BACKSPACE and ENDFILE"
+    "text": "Currently the following features are implemented and working:Sequential Access mode\n4-byte record markers, with subrecord support (allowing records larger than 2 GiB)\n8-byte record markers (used by early versions of gfortran)\nMost standard Fortran datatypes, including arrays and strings\n\"Inhomogeneous\" records, i.e. records made from multiple different datatypesThe following features are not (yet) supported:Byte-order conversion (little endian ⟷ big endian) \nDirect Access mode\nDerived Type I/O\nEquivalents of BACKSPACE and ENDFILE"
 },
 
 {
