@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Features",
     "category": "section",
-    "text": "Currently the following features are implemented and working:Sequential Access mode\n4-byte record markers, with subrecord support (allowing records larger than 2 GiB)\n8-byte record markers (used by early versions of gfortran)\nMost standard Fortran datatypes, including arrays and strings\n\"Inhomogeneous\" records, i.e. records made from multiple different datatypesThe following features are not (yet) supported:Byte-order conversion (little endian ⟷ big endian) \nDirect Access mode\nDerived Type I/O\nEquivalents of BACKSPACE and ENDFILE"
+    "text": "Currently the following features are implemented and working:Sequential Access mode\n4-byte record markers, with subrecord support (allowing records larger than 2 GiB)\n8-byte record markers (used by early versions of gfortran)\nMost standard Fortran datatypes, including arrays and strings\n\"Inhomogeneous\" records, i.e. records made from multiple different datatypes\nByte-order conversion (little endian ⟷ big endian) The following features are not (yet) supported:Direct Access mode\nDerived Type I/O\nEquivalents of BACKSPACE and ENDFILE"
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Files",
     "title": "FortranFiles.FortranFile",
     "category": "Type",
-    "text": "FortranFile(io::IO; kwargs...)\n\nWrap the given IO stream as a FortranFile containing Fortran \"unformatted\" (i.e. binary) data. The keyword arguments can be:\n\naccess for specifying the access mode; a String being one of\n\"sequential\": sequential access as in Fortran, where records have leading and trailing record markers. This is the default.\n[nothing else at the moment]\nmarker: for specifying the type of record marker; one of\nRECMRK4B: 4-byte record markers (with support for subrecords) [default]\nRECMRK8B: 8-byte record markers\n\nThe returned FortranFile can be used with Julia's read and write functions. See their documentation for more information.\n\n\n\nFortranFile(fn::String [, mode=\"r\" ]; kwargs...)\n\nOpen a file containing Fortran unformatted (i.e. binary) data for reading or writing, depending on mode which is used as in open. The keyword arguments are as in FortranFile(io::IO; kwargs...).\n\n\n\n"
+    "text": "FortranFile(io::IO; kwargs...)\n\nWrap the given IO stream as a FortranFile containing Fortran \"unformatted\" (i.e. binary) data. The keyword arguments can be:\n\naccess for specifying the access mode; a String being one of\n\"sequential\": sequential access as in Fortran, where records have leading and trailing record markers. This is the default.\n[nothing else at the moment]\nmarker: for specifying the type of record marker; one of\nRECMRK4B: 4-byte record markers (with support for subrecords) [default]\nRECMRK8B: 8-byte record markers\nconvert: for specifying the byte-order of the file data; one of\n\"native\": use the host byte order [default]\n\"big-endian\": use big-endian byte-order\n\"little-endian\": use little-endian byte-order\n\nThe returned FortranFile can be used with Julia's read and write functions. See their documentation for more information.\n\n\n\nFortranFile(fn::String [, mode=\"r\" ]; kwargs...)\n\nOpen a file containing Fortran unformatted (i.e. binary) data for reading or writing, depending on mode which is used as in open. The keyword arguments are as in FortranFile(io::IO; kwargs...).\n\n\n\n"
 },
 
 {
