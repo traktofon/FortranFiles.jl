@@ -11,6 +11,9 @@ tests:
 * gfortran (a reasonably recent version, which understands the `-std=f2008` flag)
 * GNU make
 * Perl
+Additionally, the test suite needs the following Julia packages, which can
+be installed with `Pkg.add`:
+* Iterators
 
 The tests perform the following steps:
 1. Create the Fortran source code, and compile it.
@@ -24,5 +27,6 @@ The tests perform the following steps:
 1. Use the Julia code to write the data to an output file.
 1. Check that the input and output file are identical.
 This sequence of steps is performed for each of the tested record marker types,
+and each of the supported byte orders,
 using the appropriate gfortran compiler options to adjust the Fortran output.
 
