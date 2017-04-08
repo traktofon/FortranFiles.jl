@@ -1,4 +1,4 @@
-import Base: sizeof, print, show, convert, read, write, bswap
+import Base: sizeof, print, show, convert, read, write, bswap, ==
 
 
 const Fchar = Cchar
@@ -22,6 +22,8 @@ print{N}(io::IO, ::Type{FString{N}}) = print(io, "FString{$N}")
 show{N}(io::IO, T::Type{FString{N}}) = print(io, T)
 print{N}(io::IO, s::FString{N}) = print(io, trimstring(s))
 show{N}(io::IO, s::FString{N}) = begin print(io, "FString($N,"); show(io, trimstring(s)); print(io, ")") end
+
+==(a::FString, b::FString) = trimstring(a)==trimstring(b)
 
 bswap{N}(s::FString{N}) = s # no conversion needed for byte-based strings
 
