@@ -12,10 +12,10 @@ Currently the following features are implemented and working:
   * 8-byte record markers (used by early versions of gfortran)
 * Most standard Fortran datatypes, including arrays and strings
 * "Inhomogeneous" records, i.e. records made from multiple different datatypes
+* Byte-order conversion (little endian ⟷ big endian) 
 
 The following features are not (yet) supported:
 
-* Byte-order conversion (little endian ⟷ big endian) 
 * Direct Access mode
 * Derived Type I/O
 * Equivalents of BACKSPACE and ENDFILE
