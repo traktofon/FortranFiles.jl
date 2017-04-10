@@ -9,12 +9,14 @@ julia:
   - release
   - nightly
 
+matrix:
+  # testing on OSX is expensive, skip for release
+  exclude:
+    - os: osx
+      julia: release
+
 notifications:
   email: false
-
-cache:
-  directories:
-    - $HOME/Library/Caches/Homebrew
 
 addons:
   apt:
