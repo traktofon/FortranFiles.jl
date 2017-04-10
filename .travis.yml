@@ -30,8 +30,9 @@ script:
 
 after_success:
   # build and deploy documentation
-  - julia -e 'Pkg.add("Documenter")'
-  - julia -e 'cd(Pkg.dir("FortranFiles")); include(joinpath("docs", "make.jl"))'
+  - if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_JULIA_VERSION" == "release" ]]; then
+      julia -e 'Pkg.add("Documenter"); cd(Pkg.dir("FortranFiles")); include(joinpath("docs", "make.jl"))'
+    fi
   # push coverage results to Coveralls and Codecov
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       julia -e 'cd(Pkg.dir("FortranFiles")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';

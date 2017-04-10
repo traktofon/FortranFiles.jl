@@ -20,6 +20,7 @@ deploydocs(
    target = "build",
    branch = "gh-pages",
    julia  = "release",
+   osname = "linux",
    deps   = nothing,
    make   = nothing
 )
