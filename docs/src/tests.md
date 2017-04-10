@@ -11,9 +11,6 @@ tests:
 * gfortran (a reasonably recent version, which understands the `-std=f2008` flag)
 * GNU make
 * Perl
-Additionally, the test suite needs the following Julia packages, which can
-be installed with `Pkg.add`:
-* Iterators
 
 The tests perform the following steps:
 1. Create the Fortran source code, and compile it.
