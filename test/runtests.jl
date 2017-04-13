@@ -1,6 +1,6 @@
 using FortranFiles
 using Base.Test
-using Iterators
+using Compat.Iterators: product
 
 # To test long records being split into subrecords, without needing
 # test data files of several GB, define a custom RecordMarkerType with
