@@ -19,7 +19,7 @@ deploydocs(
    repo   = "github.com/traktofon/FortranFiles.jl.git",
    target = "build",
    branch = "gh-pages",
-   julia  = "release",
+   julia  = "0.5",
    osname = "linux",
    deps   = nothing,
    make   = nothing
