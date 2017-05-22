@@ -1,4 +1,4 @@
-import Base: show, bswap
+import Base: show
 
 @compat abstract type AccessMode end
 @compat abstract type RecordMarkerType end
@@ -57,7 +57,4 @@ function get_convert(name::String)
    end
    error("unknown convert method \"$name\"")
 end
-
-# add missing byte-order swapping method
-bswap{T}(z::Complex{T}) = complex(bswap(z.re), bswap(z.im))
 

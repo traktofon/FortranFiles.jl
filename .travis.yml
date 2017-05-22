@@ -6,14 +6,17 @@ os:
   - osx
 
 julia:
-  - release
+  - 0.5
+  - 0.6
   - nightly
 
 matrix:
-  # testing on OSX is expensive, skip for release
+  # testing on OSX is expensive, skip for older julia versions
   exclude:
     - os: osx
-      julia: release
+      julia: 0.5
+  allow_failures:
+    - julia: nightly
 
 notifications:
   email: false
@@ -24,7 +27,6 @@ addons:
     - gfortran
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update     ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc; fi
 
 script:
@@ -32,7 +34,7 @@ script:
 
 after_success:
   # build and deploy documentation
-  - if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_JULIA_VERSION" == "release" ]]; then
+  - if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_JULIA_VERSION" == "0.5" ]]; then
       julia -e 'Pkg.add("Documenter"); cd(Pkg.dir("FortranFiles")); include(joinpath("docs", "make.jl"))';
     fi
   # push coverage results to Coveralls and Codecov
