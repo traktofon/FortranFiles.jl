@@ -1,4 +1,4 @@
-program gendata
+program gendataseq
 
    use,intrinsic :: iso_fortran_env
 
@@ -29,4 +29,4 @@ program gendata
 #include "fwrite.f90"
    close(lun)
 
-end program gendata
+end program gendataseq

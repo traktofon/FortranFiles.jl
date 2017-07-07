@@ -8,8 +8,12 @@ read
 
 The following examples show how to write Julia code that corresponds to
 certain Fortran `READ` statements. The Julia code assumes that `f` refers
-to an opened `FortranFile`, while the Fortran code assumes that `lun` refers
-to a logical unit number for a connected file.
+to an opened `FortranFile` in sequential access mode, while the Fortran
+code assumes that `lun` refers to a logical unit number for a connected file.
+
+For direct access mode, each `read` call additionally needs to specify the
+number of the record to read, by using the `rec` keyword argument.
+E.g. to read the first record, use `read(f, rec=1, ...)`.
 
 #### Reading a single scalar
 
