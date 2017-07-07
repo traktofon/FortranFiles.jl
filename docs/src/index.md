@@ -10,13 +10,14 @@ Currently the following features are implemented and working:
 * Sequential Access mode
   * 4-byte record markers, with subrecord support (allowing records larger than 2 GiB)
   * 8-byte record markers (used by early versions of gfortran)
+* Direct Access mode 
+  * fixed-size records without any record markers
 * Most standard Fortran datatypes, including arrays and strings
 * "Inhomogeneous" records, i.e. records made from multiple different datatypes
 * Byte-order conversion (little endian ⟷ big endian) 
 
 The following features are not (yet) supported:
 
-* Direct Access mode
 * Derived Type I/O
 * Equivalents of BACKSPACE and ENDFILE
 

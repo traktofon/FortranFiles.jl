@@ -3,8 +3,8 @@
 ## Terminology
 
 When opening a file in Fortran, you can specify its *access mode*.
-The default and most commonly used mode is *sequential access*, and
-this is the only mode currently supported by this package.
+The default and most commonly used mode is *sequential access*.
+This package additionally supports *direct access* mode.
 (If the Fortran program uses *stream access* mode, then the file
 contains plain binary data, which can be easily read with Julia's
 built-in facilities.)
@@ -30,6 +30,11 @@ recollection and may be incorrect):
 * Gfortran 4.2 introduced Ifort-compatible record markers. These are now
   the default.
 All these kinds of record markers are supported by this package.
+
+In direct access mode, all records have the same, fixed size. This record size
+must be specified when opening the file. Records can be accessed in random
+order, by specifying the number of the record to be read/written in each
+`READ` or `WRITE` statement.
 
 
 ## Opening files
@@ -92,3 +97,17 @@ probably corresponds to
 integer::lun
 open(newunit=lun, file="data.bin", form="unformatted", action="readwrite", position="append", status="unknown")
 ```
+
+#### Opening a file read-only in direct access mode
+
+```julia
+f = FortranFile("data.bin", "r", access="direct", recl=640)
+```
+for reading a file containing 640-byte records, and corresponds to
+```fortran
+integer::lun
+open(newunit=lun, file="data.bin", form="unformatted", action="read", status="old", access="direct", recl=640)
+```
+if compiled with gfortran; ifort measures `recl` not in bytes, but in 4-byte longwords, unless the
+compiler switch `-assume byterecl` is used.
+

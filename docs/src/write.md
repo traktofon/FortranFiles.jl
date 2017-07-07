@@ -8,8 +8,12 @@ write
 
 The following examples show how to write Julia code that corresponds to
 certain Fortran `WRITE` statements. The Julia code assumes that `f` refers
-to an opened `FortranFile`, while the Fortran code assumes that `lun` refers
-to a logical unit number for a connected file.
+to an opened `FortranFile` in sequential access mode, while the Fortran
+code assumes that `lun` refers to a logical unit number for a connected file.
+
+For direct access mode, each `write` call additionally needs to specify the
+number of the record to write, by using the `rec` keyword argument.
+E.g. to write the first record, use `write(f, rec=1, ...)`.
 
 #### Writing scalars
 
