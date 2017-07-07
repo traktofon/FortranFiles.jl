@@ -25,6 +25,6 @@ The tests perform the following steps:
 1. Check that the input and output file are identical.
 This sequence of steps is performed for each of the tested record types
 (variable-length records with various types of record markers, and
-fixed-length recors for direct access mode), and each of the supported byte orders,
+fixed-length records for direct access mode), and each of the supported byte orders,
 using the appropriate gfortran compiler options to adjust the Fortran output.
 
