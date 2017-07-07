@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Features",
     "category": "section",
-    "text": "Currently the following features are implemented and working:Sequential Access mode\n4-byte record markers, with subrecord support (allowing records larger than 2 GiB)\n8-byte record markers (used by early versions of gfortran)\nMost standard Fortran datatypes, including arrays and strings\n\"Inhomogeneous\" records, i.e. records made from multiple different datatypes\nByte-order conversion (little endian ⟷ big endian) The following features are not (yet) supported:Direct Access mode\nDerived Type I/O\nEquivalents of BACKSPACE and ENDFILE"
+    "text": "Currently the following features are implemented and working:Sequential Access mode\n4-byte record markers, with subrecord support (allowing records larger than 2 GiB)\n8-byte record markers (used by early versions of gfortran)\nDirect Access mode \nfixed-size records without any record markers\nMost standard Fortran datatypes, including arrays and strings\n\"Inhomogeneous\" records, i.e. records made from multiple different datatypes\nByte-order conversion (little endian ⟷ big endian) The following features are not (yet) supported:Derived Type I/O\nEquivalents of BACKSPACE and ENDFILE"
 },
 
 {
@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Files",
     "title": "Terminology",
     "category": "section",
-    "text": "When opening a file in Fortran, you can specify its access mode. The default and most commonly used mode is sequential access, and this is the only mode currently supported by this package. (If the Fortran program uses stream access mode, then the file contains plain binary data, which can be easily read with Julia's built-in facilities.)In Fortran, files are organized into records. Each READ or WRITE statement in Fortran processes a complete record. This Julia package emulates this behavior, i.e. each call to read or write will process a whole record.In sequential access mode, records can only be accessed sequentially, but they can be of variable length. The length of a record is determined by the amount of data passed to the WRITE statement. The length of the record is also written to the file, encoded in record markers which preceed and follow the record. Unfortunately, Fortran compilers have used various ways to encode the record markers (the following is from personal recollection and may be incorrect):G77 used 4 bytes, so that records could be no longer than 2 GiB.\nIfort uses 4 bytes, and uses the sign bit to signal that more data will follow. That is, the record is split into subrecords, where each subrecord has its own record markers. For records smaller than 2 GiB, this is compatible to G77.\nGfortran 4.0 and 4.1 offered 8-byte record markers as an alternative to G77-style record markers, and used them by default (at least on 64-bit systems).\nGfortran 4.2 introduced Ifort-compatible record markers. These are now the default.All these kinds of record markers are supported by this package."
+    "text": "When opening a file in Fortran, you can specify its access mode. The default and most commonly used mode is sequential access. This package additionally supports direct access mode. (If the Fortran program uses stream access mode, then the file contains plain binary data, which can be easily read with Julia's built-in facilities.)In Fortran, files are organized into records. Each READ or WRITE statement in Fortran processes a complete record. This Julia package emulates this behavior, i.e. each call to read or write will process a whole record.In sequential access mode, records can only be accessed sequentially, but they can be of variable length. The length of a record is determined by the amount of data passed to the WRITE statement. The length of the record is also written to the file, encoded in record markers which preceed and follow the record. Unfortunately, Fortran compilers have used various ways to encode the record markers (the following is from personal recollection and may be incorrect):G77 used 4 bytes, so that records could be no longer than 2 GiB.\nIfort uses 4 bytes, and uses the sign bit to signal that more data will follow. That is, the record is split into subrecords, where each subrecord has its own record markers. For records smaller than 2 GiB, this is compatible to G77.\nGfortran 4.0 and 4.1 offered 8-byte record markers as an alternative to G77-style record markers, and used them by default (at least on 64-bit systems).\nGfortran 4.2 introduced Ifort-compatible record markers. These are now the default.All these kinds of record markers are supported by this package.In direct access mode, all records have the same, fixed size. This record size must be specified when opening the file. Records can be accessed in random order, by specifying the number of the record to be read/written in each READ or WRITE statement."
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Files",
     "title": "FortranFiles.FortranFile",
     "category": "Type",
-    "text": "FortranFile(io::IO; kwargs...)\n\nWrap the given IO stream as a FortranFile containing Fortran \"unformatted\" (i.e. binary) data. The keyword arguments can be:\n\naccess for specifying the access mode; a String being one of\n\"sequential\": sequential access as in Fortran, where records have leading and trailing record markers. This is the default.\n[nothing else at the moment]\nmarker: for specifying the type of record marker; one of\nRECMRK4B: 4-byte record markers (with support for subrecords) [default]\nRECMRK8B: 8-byte record markers\nconvert: for specifying the byte-order of the file data; one of\n\"native\": use the host byte order [default]\n\"big-endian\": use big-endian byte-order\n\"little-endian\": use little-endian byte-order\n\nThe returned FortranFile can be used with Julia's read and write functions. See their documentation for more information.\n\n\n\nFortranFile(fn::String [, mode=\"r\" ]; kwargs...)\n\nOpen a file containing Fortran unformatted (i.e. binary) data for reading or writing, depending on mode which is used as in open. The keyword arguments are as in FortranFile(io::IO; kwargs...).\n\n\n\n"
+    "text": "FortranFile(io::IO; kwargs...)\n\nWrap the given IO stream as a FortranFile containing Fortran \"unformatted\" (i.e. binary) data. The keyword arguments can be:\n\naccess for specifying the access mode; a String being one of\n\"sequential\": sequential access as in Fortran, where records have leading and trailing record markers. This is the default.\n\"direct\": direct access as in Fortran, where records have fixed length and can be accessed in random order. The \"recl\" keyword must be given to specify the record length. read and write operations on these files must use the rec keyword argument to specify which record to read/write.\nmarker: for specifying the type of record marker; one of\nRECMRK4B: 4-byte record markers (with support for subrecords) [default]\nRECMRK8B: 8-byte record markers\nThis is ignored for direct access files.\nrecl: for specifying the record length if access==\"direct\". The record length is counted in bytes and must be specified as an Integer.\nconvert: for specifying the byte-order of the file data; one of\n\"native\": use the host byte order [default]\n\"big-endian\": use big-endian byte-order\n\"little-endian\": use little-endian byte-order\n\nThe returned FortranFile can be used with Julia's read and write functions. See their documentation for more information.\n\n\n\nFortranFile(fn::String [, mode=\"r\" ]; kwargs...)\n\nOpen a file containing Fortran unformatted (i.e. binary) data for reading or writing, depending on mode which is used as in open. The keyword arguments are as in FortranFile(io::IO; kwargs...).\n\n\n\n"
 },
 
 {
@@ -126,6 +126,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Opening a file for reading and writing in append mode",
     "category": "section",
     "text": "f = FortranFile(\"data.bin\", \"a+\")probably corresponds tointeger::lun\nopen(newunit=lun, file=\"data.bin\", form=\"unformatted\", action=\"readwrite\", position=\"append\", status=\"unknown\")"
+},
+
+{
+    "location": "files.html#Opening-a-file-read-only-in-direct-access-mode-1",
+    "page": "Files",
+    "title": "Opening a file read-only in direct access mode",
+    "category": "section",
+    "text": "f = FortranFile(\"data.bin\", \"r\", access=\"direct\", recl=640)for reading a file containing 640-byte records, and corresponds tointeger::lun\nopen(newunit=lun, file=\"data.bin\", form=\"unformatted\", action=\"read\", status=\"old\", access=\"direct\", recl=640)if compiled with gfortran; ifort measures recl not in bytes, but in 4-byte longwords, unless the compiler switch -assume byterecl is used."
 },
 
 {
@@ -205,7 +213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Base.read",
     "category": "Function",
-    "text": "read(f::FortranFile [, spec [, spec [, ...]]])\n\nRead data from a FortranFile. Like the READ statement in Fortran, this reads a completely record, regardless of how man specs are given. Each spec can be:\n\na DataType for scalar values; e.g. Int32, Float64, FString{10}\na tuple of DataType and one or more integers, for reading arrays of the given size; e.g. (Int32,4,2) reads an Array{Int32}(4,2)\na tuple of DataType and a tuple of integers, as an alternative way of reading arrays; e.g. (Int32,(4,2)) does the same as the previous one\nan array, for reading into pre-allocated arrays; DataType and size of the array are implied through its Julia type.\n\nReturn value:\n\nif no spec is given: nothing (the record is skipped over)\nif one spec is given: the scalar or array requested\nif more specs are given: a tuple of the scalars and arrays requested, in order\n\n\n\n"
+    "text": "read(f::FortranFile [, spec [, spec [, ...]]])\nread(f::FortranFile, rec=N, [, spec [, spec [, ...]]])\n\nRead data from a FortranFile. Like the READ statement in Fortran, this reads a completely record, regardless of how man specs are given. Each spec can be:\n\na DataType for scalar values; e.g. Int32, Float64, FString{10}\na tuple of DataType and one or more integers, for reading arrays of the given size; e.g. (Int32,4,2) reads an Array{Int32}(4,2)\na tuple of DataType and a tuple of integers, as an alternative way of reading arrays; e.g. (Int32,(4,2)) does the same as the previous one\nan array, for reading into pre-allocated arrays; DataType and size of the array are implied through its Julia type.\n\nFor direct-access files, the number of the record to be read must be specified with the rec keyword (N=1 for the first record).\n\nReturn value:\n\nif no spec is given: nothing (the record is skipped over)\nif one spec is given: the scalar or array requested\nif more specs are given: a tuple of the scalars and arrays requested, in order\n\n\n\n"
 },
 
 {
@@ -221,7 +229,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Examples",
     "category": "section",
-    "text": "The following examples show how to write Julia code that corresponds to certain Fortran READ statements. The Julia code assumes that f refers to an opened FortranFile, while the Fortran code assumes that lun refers to a logical unit number for a connected file."
+    "text": "The following examples show how to write Julia code that corresponds to certain Fortran READ statements. The Julia code assumes that f refers to an opened FortranFile in sequential access mode, while the Fortran code assumes that lun refers to a logical unit number for a connected file.For direct access mode, each read call additionally needs to specify the number of the record to read, by using the rec keyword argument. E.g. to read the first record, use read(f, rec=1, ...)."
 },
 
 {
@@ -285,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Writing Data",
     "title": "Base.write",
     "category": "Function",
-    "text": "write(f::FortranFile, items...)\n\nWrite a data record to a FortranFile. Each item should be a scalar of a Fortran-compatible datatype (e.g. Int32, Float64, FString{10}), or an array of such scalars. If no items are given, an empty record is written. Returns the number of bytes written, not including the space taken up by the record markers.\n\n\n\n"
+    "text": "write(f::FortranFile, items...)\nwrite(f::FortranFile, rec=N, items...)\n\nWrite a data record to a FortranFile. Each item should be a scalar of a Fortran-compatible datatype (e.g. Int32, Float64, FString{10}), or an array of such scalars. If no items are given, an empty record is written. Returns the number of bytes written, not including the space taken up by the record markers.\n\nFor direct-access files, the number of the record to be written must be specified with the rec keyword (N=1 for the first record).\n\n\n\n"
 },
 
 {
@@ -301,7 +309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Writing Data",
     "title": "Examples",
     "category": "section",
-    "text": "The following examples show how to write Julia code that corresponds to certain Fortran WRITE statements. The Julia code assumes that f refers to an opened FortranFile, while the Fortran code assumes that lun refers to a logical unit number for a connected file."
+    "text": "The following examples show how to write Julia code that corresponds to certain Fortran WRITE statements. The Julia code assumes that f refers to an opened FortranFile in sequential access mode, while the Fortran code assumes that lun refers to a logical unit number for a connected file.For direct access mode, each write call additionally needs to specify the number of the record to write, by using the rec keyword argument. E.g. to write the first record, use write(f, rec=1, ...)."
 },
 
 {
@@ -349,7 +357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Package Tests",
     "title": "Package Tests",
     "category": "section",
-    "text": "This package can be tested in the usual Julia way:Pkg.test(\"FortranFiles\")However, in order to test whether files written by a Fortran program are properly read, this first needs to generate some Fortran output. Therefore the following external dependencies are required to run the tests:gfortran (a reasonably recent version, which understands the -std=f2008 flag)\nGNU make\nPerlThe tests perform the following steps:Create the Fortran source code, and compile it.\nCreate the Julia source code for reading the Fortran data, and for writing it out again.\nRun the Fortran program. This produces the input test data.\nUse the Julia code to read in the test data. Datatype and storage size of the read items are checked against their expected values.\nUse the Julia code to read parts of the test data, i.e. records are skipped or read incompletely.\nUse the Julia code to write the data to an output file.\nCheck that the input and output file are identical.This sequence of steps is performed for each of the tested record marker types, and each of the supported byte orders, using the appropriate gfortran compiler options to adjust the Fortran output."
+    "text": "This package can be tested in the usual Julia way:Pkg.test(\"FortranFiles\")However, in order to test whether files written by a Fortran program are properly read, this first needs to generate some Fortran output. Therefore the following external dependencies are required to run the tests:gfortran (a reasonably recent version, which understands the -std=f2008 flag)\nGNU make\nPerlThe tests perform the following steps:Create the Fortran source code, and compile it.\nCreate the Julia source code for reading the Fortran data, and for writing it out again.\nRun the Fortran program. This produces the input test data.\nUse the Julia code to read in the test data. Datatype and storage size of the read items are checked against their expected values.\nUse the Julia code to read parts of the test data, i.e. records are skipped or read incompletely.\nUse the Julia code to write the data to an output file.\nCheck that the input and output file are identical.This sequence of steps is performed for each of the tested record types (variable-length records with various types of record markers, and fixed-length records for direct access mode), and each of the supported byte orders, using the appropriate gfortran compiler options to adjust the Fortran output."
 },
 
 {
