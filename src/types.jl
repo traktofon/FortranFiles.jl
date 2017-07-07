@@ -13,6 +13,14 @@ show(io::IO, a::SequentialAccess) =
    print(io, "sequential-access, ", a.recmrktyp)
 
 
+immutable DirectAccess <: AccessMode
+   reclen :: Int64
+end
+
+show(io::IO, a::DirectAccess) =
+   print(io, "direct-access, $(a.reclen)-byte records")
+
+
 immutable WithoutSubrecords{T} <: RecordMarkerType
 end
 

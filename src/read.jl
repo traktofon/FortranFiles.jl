@@ -2,6 +2,7 @@ import Base: read
 
 """
     read(f::FortranFile [, spec [, spec [, ...]]])
+    read(f::FortranFile, rec=N, [, spec [, spec [, ...]]])
 
 Read data from a `FortranFile`. Like the READ statement in Fortran, this
 reads a completely record, regardless of how man `spec`s are given. Each
@@ -14,25 +15,40 @@ reads a completely record, regardless of how man `spec`s are given. Each
 * an array, for reading into pre-allocated arrays; `DataType` and size
   of the array are implied through its Julia type.
 
+For direct-access files, the number of the record to be read must be
+specified with the `rec` keyword (N=1 for the first record).
+
 Return value:
 * if no `spec` is given: nothing (the record is skipped over)
 * if one `spec` is given: the scalar or array requested
 * if more `spec`s are given: a tuple of the scalars and arrays requested, in order
 """
-function read( f::FortranFile )
+function read( f::FortranFile, specs...)
+   fread(f, specs...)
+end
+
+function read( f::FortranFile{DirectAccess}, specs... ; rec::Integer=0 )
+   if rec == 0
+      error("direct-access files require specifying the record to be read (use rec keyword argument)")
+   end
+   gotorecord(f, rec)
+   fread( f, specs... )
+end
+
+function fread( f::FortranFile )
    rec = Record(f)
    close(rec)
    return nothing
 end
 
-function read( f::FortranFile, spec )
+function fread( f::FortranFile, spec )
    rec = Record(f)
    data = read_spec(rec, spec)
    close(rec)
    return data
 end
 
-function read( f::FortranFile, specs... )
+function fread( f::FortranFile, specs... )
    rec = Record(f)
    data = map( spec->read_spec(rec,spec), specs)
    close(rec)
