@@ -175,7 +175,7 @@ end
    outfilename = "chck_$(tag).bin"
 
    @testset "Opening files" begin
-      if rectest.rectyp isa RecordMarkerType
+      if isa(rectest.rectyp, RecordMarkerType)
          infile  = FortranFile(infilename, "r", marker = rectest.rectyp, convert = botest.name)
          @test infile.acctyp.recmrktyp == rectest.rectyp
          outfile = FortranFile(outfilename, "w", marker = rectest.rectyp, convert = botest.name)
