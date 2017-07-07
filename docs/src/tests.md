@@ -23,7 +23,8 @@ The tests perform the following steps:
    skipped or read incompletely.
 1. Use the Julia code to write the data to an output file.
 1. Check that the input and output file are identical.
-This sequence of steps is performed for each of the tested record marker types,
-and each of the supported byte orders,
+This sequence of steps is performed for each of the tested record types
+(variable-length records with various types of record markers, and
+fixed-length recors for direct access mode), and each of the supported byte orders,
 using the appropriate gfortran compiler options to adjust the Fortran output.
 

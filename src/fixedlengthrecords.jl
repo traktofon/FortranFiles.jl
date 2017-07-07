@@ -46,20 +46,16 @@ function unsafe_write( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
 end
 
 function close( rec::FixedLengthRecord )
-   if rec.writable
-      # according to the standard, any preceeding data in the record
-      # should not be clobbered; but if we are the end of the file,
-      # we should pad it to have a complete record.
-      if rec.nleft != 0
-         if eof(rec.io)
-            skip(rec.io, rec.nleft)
-            truncate(rec.io, position(rec.io))
-         else
-            skip(rec.io, rec.nleft)
-         end
+   if rec.nleft != 0
+      if rec.writable
+         # Fortran standard 9.6.4.5.2 point 7:
+         # "If the file is connected for direct access and the values specified by the
+         #  output list do not fill the record, the remainder of the record is undefined."
+         # Following gfortran, we fill it with zeros.
+         write(rec.io, zeros(UInt8, rec.nleft))
+      else
+         skip(rec.io, rec.nleft)
       end
-   else
-      skip(rec.io, rec.nleft)
    end
    nothing
 end
