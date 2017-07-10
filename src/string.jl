@@ -29,7 +29,7 @@ bswap{N}(s::FString{N}) = s # no conversion needed for byte-based strings
 
 function convert{N}(::Type{FString{N}}, s::String)
    l = length(s)
-   FString{N}( [ Fchar(i>l?' ':s[i]) for i=1:N ] )
+   FString{N}( [ Fchar((i>l) ? ' ' : s[i]) for i=1:N ] )
 end
 
 """
@@ -45,7 +45,7 @@ convert{N}(::Type{String}, s::FString{N}) = String(map(Char,s.data))
 
 
 function read{N}( io::IO, t::Type{FString{N}} )
-   s = read(io, Fchar, N)
+   s = read!(io, Array{Fchar}(N))
    FString{N}(s)
 end
 

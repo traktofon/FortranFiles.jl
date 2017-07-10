@@ -26,7 +26,7 @@ function mkmarker(towrite, msl)
 end
 
 function wrmarker(io, fn, subreclen, sign)
-   marker = subreclen * (sign? -1: 1)
+   marker = subreclen * (sign ? -1 : 1)
    write(io, convert(Int32, marker) |> fn)
 end
 wrmarker(rec::Record, subreclen, sign) = wrmarker(rec.io, rec.convert.onwrite, subreclen, sign)
