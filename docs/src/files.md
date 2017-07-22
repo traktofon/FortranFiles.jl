@@ -39,7 +39,6 @@ in the file without any header or record marker.  This is compatible with the
 standard behaviour of gfortran and ifort.
 
 
-
 ## Opening files
 
 To open a file which contains Fortran unformatted data,
