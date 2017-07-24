@@ -66,9 +66,20 @@ macro fread(fortranFile, args...)
 
    # construct the code block
    if haverecnum
-      push!(ex.args, :(gotorecord(f, $recnum)))
+      push!(ex.args, quote
+         if !isa(f, FortranFile{DirectAccess})
+            error("keyword argument 'rec' only allowed for direct-access files")
+         end
+         rec = Record(f, $recnum)
+      end)
+   else
+      push!(ex.args, quote
+         if isa(f, FortranFile{DirectAccess})
+            error("keyword argument 'rec' required for direct-access files")
+         end
+         rec = Record(f)
+      end)
    end
-   push!(ex.args, :(rec = Record(f)))
    for spec in specs
       if isa(spec, Tuple)
          var, typ = spec

@@ -31,7 +31,7 @@ function wrmarker(io, fn, subreclen, sign)
 end
 wrmarker(rec::Record, subreclen, sign) = wrmarker(rec.io, rec.convert.onwrite, subreclen, sign)
 
-function Record{C}( f::FortranFile{SequentialAccess{WithSubrecords},C} )
+function Record( f::FortranFile{SequentialAccess{WithSubrecords}} )
 ## constructor for readable records
    conv = f.convert
    msl = f.acctyp.recmrktyp.max_subrecord_length

@@ -24,34 +24,33 @@ Return value:
 * if more `spec`s are given: a tuple of the scalars and arrays requested, in order
 """
 function read( f::FortranFile, specs...)
-   fread(f, specs...)
+   record = Record(f)
+   result = fread(record, specs...)
+   close(record)
+   return result
 end
 
 function read( f::FortranFile{DirectAccess}, specs... ; rec::Integer=0 )
    if rec == 0
       error("direct-access files require specifying the record to be read (use rec keyword argument)")
    end
-   gotorecord(f, rec)
-   fread( f, specs... )
+   record = Record(f, rec)
+   result = fread(record, specs...)
+   close(record)
+   return result
 end
 
-function fread( f::FortranFile )
-   rec = Record(f)
-   close(rec)
+function fread( rec::Record )
    return nothing
 end
 
-function fread( f::FortranFile, spec )
-   rec = Record(f)
+function fread( rec::Record, spec )
    data = read_spec(rec, spec)
-   close(rec)
    return data
 end
 
-function fread( f::FortranFile, specs... )
-   rec = Record(f)
+function fread( rec::Record, specs... )
    data = map( spec->read_spec(rec,spec), specs)
-   close(rec)
    return data
 end
 

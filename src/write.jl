@@ -14,29 +14,31 @@ For direct-access files, the number of the record to be written must be
 specified with the `rec` keyword (N=1 for the first record).
 """
 function write(f::FortranFile, items...)
-   fwrite(f, items...)
+   # how much data to write?
+   towrite = sizeof_vars(items)
+   record = Record(f, towrite)
+   result = fwrite(record, items...)
+   close(record)
+   return result
 end
 
 function write(f::FortranFile{DirectAccess}, items...; rec::Integer=0)
    if rec==0
       error("direct-access files require specifying the record to be written (use rec keyword argument)")
    end
-   gotorecord(f, rec)
-   fwrite(f, items...)
+   towrite = sizeof_vars(items)
+   record = Record(f, rec, towrite)
+   result = fwrite(record, items...)
+   close(record)
+   return result
 end
 
-function fwrite( f::FortranFile )
-   rec = Record(f, 0)
-   close(rec)
+function fwrite( rec::Record )
    return 0
 end
 
-function fwrite( f::FortranFile, vars... )
-   # how much data to write?
-   towrite = sum( sizeof_var(var) for var in vars )
-   rec = Record(f, towrite)
+function fwrite( rec::Record, vars... )
    written = sum( write_var(rec,var) for var in vars )
-   close(rec)
    return written
 end
 
@@ -77,4 +79,6 @@ function sizeof_var{T}( var::T )
    check_fortran_type(var) || error("cannot serialize datatype $T for Fortran")
    sizeof(var)
 end
+
+sizeof_vars(vars) = isempty(vars) ? 0 : sum( sizeof_var(var) for var in vars )
 

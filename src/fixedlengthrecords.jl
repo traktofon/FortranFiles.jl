@@ -8,20 +8,22 @@ type FixedLengthRecord{T,C} <: Record
    convert  :: C     # convert method
 end
 
-function Record{C}( f::FortranFile{DirectAccess,C} )
+function Record( f::FortranFile{DirectAccess}, recnum::Integer )
 ## constructor for readable records
    conv = f.convert
    reclen = f.acctyp.reclen
+   gotorecord(f, recnum)
    FixedLengthRecord(f.io, reclen, reclen, false, conv)
 end
 
-function Record{C}( f::FortranFile{DirectAccess,C}, towrite::Integer )
+function Record( f::FortranFile{DirectAccess}, recnum::Integer, towrite::Integer )
 ## constructor for writable records
    conv = f.convert
    reclen = f.acctyp.reclen
    if towrite > reclen
       error("attempting to write record of $(towrite) bytes into a file of record length $(reclen) bytes")
    end
+   gotorecord(f, recnum)
    FixedLengthRecord(f.io, reclen, reclen, true, conv)
 end
 
