@@ -165,7 +165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Datatypes",
     "title": "FortranFiles.FString",
     "category": "Type",
-    "text": "FString{N}\n\nDatatype for reading and writing character strings from FortranFiles. The type parameter N signifies the length of the string. This is the equivalent of the Fortran datatype CHARACTER(len=N).\n\n\n\n"
+    "text": "FString{L}\n\nDatatype for reading and writing character strings from FortranFiles. The type parameter L signifies the length of the string. This is the equivalent of the Fortran datatype CHARACTER(len=L).\n\n\n\n"
 },
 
 {
