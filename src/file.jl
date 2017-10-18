@@ -1,6 +1,6 @@
 import Base: close, show
 
-immutable FortranFile{A<:AccessMode, C<:Conversion}
+struct FortranFile{A<:AccessMode, C<:Conversion}
    io     :: IO    # the underyling I/O stream
    acctyp :: A
    convert:: C

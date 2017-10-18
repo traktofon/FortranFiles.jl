@@ -1,6 +1,6 @@
 import Base: close, unsafe_read, unsafe_write
 
-type FixedLengthRecord{T,C} <: Record
+mutable struct FixedLengthRecord{T,C} <: Record
    io       :: IO    # underlying I/O stream
    reclen   :: T     # length of this record
    nleft    :: T     # bytes left in this record
@@ -8,14 +8,14 @@ type FixedLengthRecord{T,C} <: Record
    convert  :: C     # convert method
 end
 
-function Record{C}( f::FortranFile{DirectAccess,C} )
+function Record( f::FortranFile{DirectAccess,C} ) where {C}
 ## constructor for readable records
    conv = f.convert
    reclen = f.acctyp.reclen
    FixedLengthRecord(f.io, reclen, reclen, false, conv)
 end
 
-function Record{C}( f::FortranFile{DirectAccess,C}, towrite::Integer )
+function Record( f::FortranFile{DirectAccess,C}, towrite::Integer ) where {C}
 ## constructor for writable records
    conv = f.convert
    reclen = f.acctyp.reclen

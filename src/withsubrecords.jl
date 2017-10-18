@@ -1,6 +1,6 @@
 import Base: close, unsafe_read, unsafe_write
 
-type RecordWithSubrecords{C} <: Record
+mutable struct RecordWithSubrecords{C} <: Record
    io        :: IO      # underlying I/O stream
    maxsrlen  :: Int32   # maximum subrecord length
    subreclen :: Int32   # length of current subrecord
@@ -31,7 +31,7 @@ function wrmarker(io, fn, subreclen, sign)
 end
 wrmarker(rec::Record, subreclen, sign) = wrmarker(rec.io, rec.convert.onwrite, subreclen, sign)
 
-function Record{C}( f::FortranFile{SequentialAccess{WithSubrecords},C} )
+function Record( f::FortranFile{SequentialAccess{WithSubrecords},C} ) where {C}
 ## constructor for readable records
    conv = f.convert
    msl = f.acctyp.recmrktyp.max_subrecord_length

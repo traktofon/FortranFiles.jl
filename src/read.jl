@@ -61,28 +61,28 @@ function read_spec( rec::Record, spec::Type{Int8} )
    return b[1]
 end
 
-function read_spec{T}( rec::Record, spec::Type{T} )
+function read_spec( rec::Record, spec::Type{T} ) where {T}
    rec.convert.onread( read(rec, spec) )::T
 end
 
-function read_spec{T,N}( rec::Record, spec::Array{T,N} )
+function read_spec( rec::Record, spec::Array{T,N} ) where {T,N}
    arr = read!(rec, spec)::Array{T,N}
    map!(rec.convert.onread, arr, arr)
    return arr
 end
 
-function read_spec{I<:Integer}( rec::Record, spec::Tuple{DataType,I} )
+function read_spec(rec::Record, spec::Tuple{DataType,I} ) where {I<:Integer}
    T,n = spec
    read_spec(rec, Array{T}(n))::Array{T,1}
 end
 
-function read_spec{N}( rec::Record, spec::Tuple{DataType, Vararg{Integer,N}} )
+function read_spec( rec::Record, spec::Tuple{DataType, Vararg{Integer,N}} ) where {N}
    T = spec[1]
    sz = spec[2:end]
    read_spec(rec, Array{T}(sz...))::Array{T,N}
 end
 
-function read_spec{N}( rec::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} )
+function read_spec( rec::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} ) where {N}
    T,sz = spec
    read_spec(rec, Array{T}(sz...))::Array{T,N}
 end
