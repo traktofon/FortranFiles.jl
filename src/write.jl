@@ -32,7 +32,6 @@ function fwrite( f::FortranFile )
 end
 
 function fwrite( f::FortranFile, vars... )
-   println(STDERR, typeof.(vars))
    # how much data to write?
    towrite = sum( sizeof_var(var) for var in vars )
    rec = Record(f, towrite)
@@ -66,14 +65,19 @@ end
 
 # write strings: delegate to data field
 write_var( rec::Record, var::FString ) = write_var(rec, var.data)
-# TODO: the following triggers internal error on method resolution
-write_var( rec::Record, arr::Array{FString{L},N} ) where {L,N} = sum( write_var(rec, var.data) for var in arr )
+# TODO: the following triggers internal error on method resolution for julia-0.7
+write_var( rec::Record, arr::Array{FString{L},N} ) where {L,N} = write_fstrings(rec, arr)
+write_fstrings( rec::Record, arr::Array{FString{L},N} ) where {L,N} = sum( write_var(rec, var.data) for var in arr )
 
 # specialized versions for no byte-order conversion
 write_var( rec::RecordWithSubrecords{NOCONV}, arr::Array{T,N} ) where {T,N} = write(rec, arr)
 write_var( rec::RecordWithSubrecords{NOCONV}, arr::Array{Int8,N} ) where {N} = write(rec, arr)
 write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{T,N} ) where {T,N,R} = write(rec, arr)
 write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{Int8,N} ) where {N,R} = write(rec, arr)
+
+# resolve ambiguities
+write_var( rec::RecordWithSubrecords{NOCONV}, arr::Array{FString{L},N} ) where {L,N} = write_fstrings(rec, arr)
+write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{FString{L},N} ) where {L,N,R} = write_fstrings(rec, arr)
 
 check_fortran_type(x::Array{T}) where {T} = check_fortran_type(x[1])
 check_fortran_type(x::FString) = true

@@ -1,5 +1,5 @@
 using FortranFiles
-using Test
+using Compat.Test
 using Compat.Iterators: product
 
 import FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
