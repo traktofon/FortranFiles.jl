@@ -4,7 +4,7 @@ using Compat
 
 export FortranFile, rewind
 export RECMRK4B, RECMRK8B
-export FString, trimstring
+export FString, trimstring, trimlen, trim
 
 include("types.jl")
 include("file.jl")

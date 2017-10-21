@@ -3,18 +3,12 @@ language: julia
 
 os:
   - linux
-  - osx
 
 julia:
-  - 0.5
   - 0.6
   - nightly
 
 matrix:
-  # testing on OSX is expensive, skip for older julia versions
-  exclude:
-    - os: osx
-      julia: 0.5
   allow_failures:
     - julia: nightly
 

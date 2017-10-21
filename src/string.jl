@@ -14,44 +14,67 @@ struct FString{L}
    data :: Array{Fchar,1}
 end
 
-sizeof(::Type{FString{N}}) where {N} = N
-sizeof(::FString{N}) where {N} = N
-sizeof(a::Array{FString{N}}) where {N} = N*length(a)
+sizeof(::Type{FString{L}}) where {L} = L
+sizeof(::FString{L}) where {L} = L
+sizeof(a::Array{FString{L}}) where {L} = L*length(a)
 
-print(io::IO, ::Type{FString{N}}) where {N} = print(io, "FString{$N}")
-show(io::IO, T::Type{FString{N}}) where {N} = print(io, T)
-print(io::IO, s::FString{N}) where {N} = print(io, trimstring(s))
-show(io::IO, s::FString{N}) where {N} = begin print(io, "FString($N,"); show(io, trimstring(s)); print(io, ")") end
+# print(io::IO, s::FString{L}) where {L} = print(io, trimstring(s))
+show(io::IO, s::FString{L}) where {L} = begin print(io, "FString($L,"); show(io, trimstring(s)); print(io, ")") end
 
 ==(a::FString, b::FString) = trimstring(a)==trimstring(b)
 
-bswap(s::FString{N}) where {N} = s # no conversion needed for byte-based strings
+bswap(s::FString{L}) where {L} = s # no conversion needed for byte-based strings
 
-function convert(::Type{FString{N}}, s::String) where {N}
+function convert(::Type{FString{L}}, s::String) where {L}
    l = length(s)
-   FString{N}( [ Fchar((i>l) ? ' ' : s[i]) for i=1:N ] )
+   FString{L}( [ Fchar((i>l) ? ' ' : s[i]) for i=1:L ] )
 end
 
 """
-    FString(N, s::String)
+    FString(L, s::String)
 
-Convert the Julia `String` `s` to an `FString{N}`.
+Convert the Julia `String` `s` to an `FString{L}`.
 `s` must contain only ASCII characters.
 As in Fortran, the string will be padded with spaces or truncated in order to reach the desired length.
 """
-FString(N, s::String) = convert( FString{N}, s )
+FString(L, s::String) = convert( FString{L}, s )
 
-convert(::Type{String}, s::FString{N}) where {N} = String(map(Char,s.data))
+convert(::Type{String}, s::FString{L}) where {L} = String(map(Char,s.data))
 
 
-function read( io::IO, t::Type{FString{N}} ) where {N}
-   s = read!(io, Array{Fchar}(N))
-   FString{N}(s)
+function read( io::IO, t::Type{FString{L}} ) where {L}
+   s = read!(io, Array{Fchar}(L))
+   FString{L}(s)
 end
 
 
-function write( io::IO, s::FString{N} ) where {N}
+function write( io::IO, s::FString{L} ) where {L}
    write(io, s.data)
+end
+
+"""
+    trimlen(s::FString)
+
+Returns the length of the `FString` `s` with trailing spaces ignored.
+"""
+function trimlen( s::FString{L} ) where {L}
+   l = L
+   while l>0
+      if s.data[l] != Fchar(' '); break; end
+      l -= 1
+   end
+   return l
+end
+
+"""
+    trim(s::FString)
+
+Returns a truncated copy of the `FString` `s` where all trailing
+spaces are removed.
+"""
+function trim( s::FString{L} ) where {L}
+   l = trimlen(s)
+   FString{l}(s.data[1:l])
 end
 
 """
@@ -60,12 +83,6 @@ end
 Convert the `FString` `s` into a Julia `String`, where
 trailing spaces are removed. Use `String(s)` to keep the spaces.
 """
-function trimstring( s::FString{N} ) where {N}
-   l = N
-   while l>0
-      if s.data[l] != Fchar(' '); break; end
-      l -= 1
-   end
-   String( map(Char, s.data[1:l]) )
-end
+trimstring( s::FString{L} ) where {L} =
+   String( map(Char, s.data[1:trimlen(s)]) )
 

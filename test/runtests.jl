@@ -157,12 +157,18 @@ end
    fstr = FString(N, jstr)
    @test typeof(fstr) == FString{N}
    @test trimstring(fstr) == jstr
-   fstr = FString(80, jstr)
-   @test typeof(fstr) == FString{80}
-   @test trimstring(fstr) == jstr
-   fstr = FString(8, jstr)
-   @test typeof(fstr) == FString{8}
-   @test trimstring(fstr) == jstr[1:8]
+   @test trimlen(fstr) == N
+   @test trim(fstr) == fstr
+   fstr80 = FString(80, jstr)
+   @test typeof(fstr80) == FString{80}
+   @test trimstring(fstr80) == jstr
+   @test trimlen(fstr80) == N
+   @test trim(fstr80) == fstr
+   fstr8 = FString(8, jstr)
+   @test typeof(fstr8) == FString{8}
+   @test trimstring(fstr8) == jstr[1:8]
+   @test trimlen(fstr8) == 8
+   @test trim(fstr8) == fstr8
    jstr = "Hällo Wörld!"
    @test_throws InexactError FString(80, jstr)
 end
