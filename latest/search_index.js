@@ -173,7 +173,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Datatypes",
     "title": "FortranFiles.FString",
     "category": "Method",
-    "text": "FString(N, s::String)\n\nConvert the Julia String s to an FString{N}. s must contain only ASCII characters. As in Fortran, the string will be padded with spaces or truncated in order to reach the desired length.\n\n\n\n"
+    "text": "FString(L, s::String)\n\nConvert the Julia String s to an FString{L}. s must contain only ASCII characters. As in Fortran, the string will be padded with spaces or truncated in order to reach the desired length.\n\n\n\n"
 },
 
 {
@@ -185,11 +185,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types.html#FortranFiles.trimlen",
+    "page": "Datatypes",
+    "title": "FortranFiles.trimlen",
+    "category": "Function",
+    "text": "trimlen(s::FString)\n\nReturns the length of the FString s with trailing spaces ignored.\n\n\n\n"
+},
+
+{
+    "location": "types.html#FortranFiles.trim",
+    "page": "Datatypes",
+    "title": "FortranFiles.trim",
+    "category": "Function",
+    "text": "trim(s::FString)\n\nReturns a truncated copy of the FString s where all trailing spaces are removed.\n\n\n\n"
+},
+
+{
     "location": "types.html#Strings-1",
     "page": "Datatypes",
     "title": "Strings",
     "category": "section",
-    "text": "Fortran character strings possess an inherent length property. To support reading and writing such data, this package defines an FString datatype which takes the length as a type parameter:FString{N}\nFString(N, s::String)There is not much you can do with FStrings, except printing them and writeing them back to a FortranFile.  For conversion to a Julia String, use the following:trimstring"
+    "text": "Fortran character strings possess an inherent length property. To support reading and writing such data, this package defines an FString datatype which takes the length as a type parameter:FString{L}\nFString(L, s::String)There is not much you can do with FStrings, except printing them and writeing them back to a FortranFile.  For conversion to a Julia String, use the following:trimstringTo make it easier to convert Fortran code into Julia, the following functions are provided for convenience:trimlen\ntrim"
 },
 
 {
