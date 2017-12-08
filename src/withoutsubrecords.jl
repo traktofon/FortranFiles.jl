@@ -1,6 +1,6 @@
 import Base: close, unsafe_read, unsafe_write
 
-type RecordWithoutSubrecords{T,C} <: Record
+mutable struct RecordWithoutSubrecords{T,C} <: Record
    io       :: IO    # underlying I/O stream
    reclen   :: T     # length of this record
    nleft    :: T     # bytes left in this record
@@ -8,14 +8,14 @@ type RecordWithoutSubrecords{T,C} <: Record
    convert  :: C     # convert method
 end
 
-function Record{T,C}( f::FortranFile{SequentialAccess{WithoutSubrecords{T}},C} )
+function Record( f::FortranFile{SequentialAccess{WithoutSubrecords{T}},C} ) where {T,C}
 ## constructor for readable records
    conv = f.convert
    reclen = conv.onread( read(f.io, T) ) # read leading record marker
    RecordWithoutSubrecords{T,C}(f.io, reclen, reclen, false, conv)
 end
 
-function Record{T,C}( f::FortranFile{SequentialAccess{WithoutSubrecords{T}},C}, towrite::Integer )
+function Record( f::FortranFile{SequentialAccess{WithoutSubrecords{T}},C}, towrite::Integer ) where {T,C}
 ## constructor for writable records
    conv = f.convert
    write(f.io, conv.onwrite( convert(T, towrite) )) # write leading record marker
@@ -36,7 +36,7 @@ function unsafe_write( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
    return nwritten
 end
 
-function close{T}( rec::RecordWithoutSubrecords{T} )
+function close( rec::RecordWithoutSubrecords{T} ) where {T}
    if rec.writable
       if rec.nleft != 0; error("record has not yet been completely written"); end
       write(rec.io, rec.convert.onwrite( convert(T, rec.reclen)) ) # write trailing record marker

@@ -1,6 +1,6 @@
 import Base: close, unsafe_read, unsafe_write
 
-type FixedLengthRecord{T,C} <: Record
+mutable struct FixedLengthRecord{T,C} <: Record
    io       :: IO    # underlying I/O stream
    reclen   :: T     # length of this record
    nleft    :: T     # bytes left in this record

@@ -48,8 +48,8 @@ and writing such data, this package defines an `FString` datatype which takes th
 length as a type parameter:
 
 ```@docs
-FString{N}
-FString(N, s::String)
+FString{L}
+FString(L, s::String)
 ```
 
 There is not much you can do with `FString`s, except `print`ing them and
@@ -59,6 +59,15 @@ use the following:
 ```@docs
 trimstring
 ```
+
+To make it easier to convert Fortran code into Julia, the following
+functions are provided for convenience:
+
+```@docs
+trimlen
+trim
+```
+
 
 ## Logicals
 

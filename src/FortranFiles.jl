@@ -1,10 +1,12 @@
+__precompile__()
+
 module FortranFiles
 
 using Compat
 
 export FortranFile, rewind
 export RECMRK4B, RECMRK8B
-export FString, trimstring
+export FString, trimstring, trimlen, trim
 export @fread
 
 include("types.jl")
