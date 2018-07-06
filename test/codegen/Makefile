@@ -10,7 +10,7 @@ RANDOMOBJ := $(RANDOMEXT:%=random%.o)
 GENDATASEQOBJ := $(RANDOMOBJ) randutil.o gendataseq$(SUFFIX).o
 GENDATADIRECTOBJ := $(RANDOMOBJ) randutil.o gendatadirect$(SUFFIX).o
 
-JGENSRC := jwrite.jl jread.jl jskip.jl
+JGENSRC := jwrite.jl jread.jl jskip.jl jfread.jl
 FGENSRC := fdecl.f90 fwrite.f90
 
 gendataseq: gendataseq$(SUFFIX).x

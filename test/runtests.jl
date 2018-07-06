@@ -1,6 +1,6 @@
 using FortranFiles
-using Compat.Test
-using Compat.Iterators: product
+using Base.Test
+using Base.Iterators: product
 
 import FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
 

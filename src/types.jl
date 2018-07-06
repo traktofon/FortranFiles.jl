@@ -1,8 +1,8 @@
 import Base: show
 
-@compat abstract type AccessMode end
-@compat abstract type RecordMarkerType end
-@compat abstract type Record<:IO end
+abstract type AccessMode end
+abstract type RecordMarkerType end
+abstract type Record<:IO end
 
 
 struct SequentialAccess{RT<:RecordMarkerType} <: AccessMode
