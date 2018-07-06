@@ -165,7 +165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Datatypes",
     "title": "FortranFiles.FString",
     "category": "type",
-    "text": "FString{L}\n\nDatatype for reading and writing character strings from FortranFiles. The type parameter L signifies the length of the string. This is the equivalent of the Fortran datatype CHARACTER(len=L).\n\n\n\n"
+    "text": "FString{L}\n\nDatatype for reading and writing character strings from FortranFiles. The type parameter L signifies the length of the string. This is the equivalent to the Fortran datatype CHARACTER(len=L).\n\n\n\n"
 },
 
 {
@@ -233,11 +233,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "read.html#FortranFiles.@fread",
+    "page": "Reading Data",
+    "title": "FortranFiles.@fread",
+    "category": "macro",
+    "text": "@fread f [ rec=N ] [ spec ... ]\n\nMacro interface for reading data from the FortranFile f. A single @fread call will process a single data record from the file. Each spec can be:\n\na var::T declaration, which will read data of the type T from the file, and assign it to the variable var. T can be one of the usual Fortran scalar datatypes, or an array containing such data.\na variable name, which must refer to a pre-allocated array.\n\nNote that a spec can refer to variables assigned by previous specs. The rec keyword must be given iff f refers to a direct-access file, and specifies which record to read.\n\nExample:\n\n@fread f n::Int32 x::Array{Float64}(n)\n\nThis reads a single Int32, assigns it to n, and then reads a Float64 array with n elements and assigns it to x. Such a record can not be processed by the function-based read interface. The equivalent call would be\n\nn, x = read(f, Int32, (Float64,n))\n\nbut this can\'t work because n is only assigned after the read statement is processed. The macro interface is provided to cover such cases.\n\n\n\n"
+},
+
+{
     "location": "read.html#Reading-Data-1",
     "page": "Reading Data",
     "title": "Reading Data",
     "category": "section",
-    "text": "read"
+    "text": "read\n@fread"
 },
 
 {
@@ -245,7 +253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Examples",
     "category": "section",
-    "text": "The following examples show how to write Julia code that corresponds to certain Fortran READ statements. The Julia code assumes that f refers to an opened FortranFile in sequential access mode, while the Fortran code assumes that lun refers to a logical unit number for a connected file.For direct access mode, each read call additionally needs to specify the number of the record to read, by using the rec keyword argument. E.g. to read the first record, use read(f, rec=1, ...)."
+    "text": "The following examples show how to write Julia code that corresponds to certain Fortran READ statements. The Julia code assumes that f refers to an opened FortranFile in sequential access mode, while the Fortran code assumes that lun refers to a logical unit number for a connected file.For direct access mode, each read call additionally needs to specify the number of the record to read, by using the rec keyword argument. E.g. to read the first record, use read(f, rec=1, ...).The @fread macro can be used if the size of data to be read from a record depends on earlier data from the same record. See example below."
 },
 
 {
@@ -286,6 +294,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Reading a record with multiple data",
     "category": "section",
     "text": "i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (Complex128,10,10))corresponds tointeger(kind=int32)::i\ncharacter(len=20),dimension(10)::strings\ncomplex(kind=real64),dimension(10,10)::zmatrix\nread(lun) i,strings,matrix"
+},
+
+{
+    "location": "read.html#Reading-a-record-where-the-size-is-not-known-ahead-1",
+    "page": "Reading Data",
+    "title": "Reading a record where the size is not known ahead",
+    "category": "section",
+    "text": "@fread f n::Int32 vec::Array{Float64}(n)corresponds tointeger(kind=int32)::n,i\nread(kind=real64),dimension(*)::vec ! assume already allocated\nread(lun) n,(vec(i), i=1,n)"
 },
 
 {
