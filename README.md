@@ -46,6 +46,9 @@ jstr = trimstring(fstr)
 # reading a record with multiple data
 i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (Complex128,10,10))
 
+# macro for reading a record where the size is not known ahead
+@fread f n::Int32 vec::Array{Float64}(n)
+
 # skipping over a record
 read(f)
 

@@ -1,7 +1,7 @@
 """
     @fread f [ rec=N ] [ spec ... ]
 
-Macro interface for reading data from the `FortranFile` f.
+Macro interface for reading data from the `FortranFile` `f`.
 A single `@fread` call will process a single data record from the file.
 Each `spec` can be:
 * a `var::T` declaration, which will read data of the type `T` from the
@@ -9,7 +9,7 @@ Each `spec` can be:
   Fortran scalar datatypes, or an array containing such data.
 * a variable name, which must refer to a pre-allocated array.
 Note that a `spec` can refer to variables assigned by previous specs.
-The `rec` keyword must be given iff f refers to a direct-access file,
+The `rec` keyword must be given iff `f` refers to a direct-access file,
 and specifies which record to read.
 
 

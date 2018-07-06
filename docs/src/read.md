@@ -2,6 +2,7 @@
 
 ```@docs
 read
+@fread
 ```
 
 ## Examples
@@ -14,6 +15,10 @@ code assumes that `lun` refers to a logical unit number for a connected file.
 For direct access mode, each `read` call additionally needs to specify the
 number of the record to read, by using the `rec` keyword argument.
 E.g. to read the first record, use `read(f, rec=1, ...)`.
+
+The `@fread` macro can be used if the size of data to be read from a record
+depends on earlier data from the same record. See example below.
+
 
 #### Reading a single scalar
 
@@ -81,6 +86,18 @@ integer(kind=int32)::i
 character(len=20),dimension(10)::strings
 complex(kind=real64),dimension(10,10)::zmatrix
 read(lun) i,strings,matrix
+```
+
+#### Reading a record where the size is not known ahead
+
+```julia
+@fread f n::Int32 vec::Array{Float64}(n)
+```
+corresponds to
+```fortran
+integer(kind=int32)::n,i
+read(kind=real64),dimension(*)::vec ! assume already allocated
+read(lun) n,(vec(i), i=1,n)
 ```
 
 #### Skipping over a record
