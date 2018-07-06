@@ -61,15 +61,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Files",
     "title": "Terminology",
     "category": "section",
-    "text": "When opening a file in Fortran, you can specify its access mode. The default and most commonly used mode is sequential access. This package additionally supports direct access mode. (If the Fortran program uses stream access mode, then the file contains plain binary data, which can be easily read with Julia's built-in facilities.)In Fortran, files are organized into records. Each READ or WRITE statement in Fortran processes a complete record. This Julia package emulates this behavior, i.e. each call to read or write will process a whole record.In sequential access mode, records can only be accessed sequentially, but they can be of variable length. The length of a record is determined by the amount of data passed to the WRITE statement. The length of the record is also written to the file, encoded in record markers which preceed and follow the record. Unfortunately, Fortran compilers have used various ways to encode the record markers (the following is from personal recollection and may be incorrect):g77 used 4 bytes, so that records could be no longer than 2 GiB.\nifort uses 4 bytes, and uses the sign bit to signal that more data will follow. That is, the record is split into subrecords, where each subrecord has its own record markers. For records smaller than 2 GiB, this is compatible to g77.\ngfortran 4.0 and 4.1 offered 8-byte record markers as an alternative to g77-style record markers, and used them by default (at least on 64-bit systems).\ngfortran 4.2 introduced ifort-compatible record markers. These are now the default.All these kinds of record markers are supported by this package.In direct access mode, all records have the same, fixed size. This record size must be specified when opening the file. Records can be accessed in random order, by specifying the number of the record to be read/written in each READ or WRITE statement.  Currently it is assumed that records are stored in the file without any header or record marker.  This is compatible with the standard behaviour of gfortran and ifort."
+    "text": "When opening a file in Fortran, you can specify its access mode. The default and most commonly used mode is sequential access. This package additionally supports direct access mode. (If the Fortran program uses stream access mode, then the file contains plain binary data, which can be easily read with Julia\'s built-in facilities.)In Fortran, files are organized into records. Each READ or WRITE statement in Fortran processes a complete record. This Julia package emulates this behavior, i.e. each call to read or write will process a whole record.In sequential access mode, records can only be accessed sequentially, but they can be of variable length. The length of a record is determined by the amount of data passed to the WRITE statement. The length of the record is also written to the file, encoded in record markers which preceed and follow the record. Unfortunately, Fortran compilers have used various ways to encode the record markers (the following is from personal recollection and may be incorrect):g77 used 4 bytes, so that records could be no longer than 2 GiB.\nifort uses 4 bytes, and uses the sign bit to signal that more data will follow. That is, the record is split into subrecords, where each subrecord has its own record markers. For records smaller than 2 GiB, this is compatible to g77.\ngfortran 4.0 and 4.1 offered 8-byte record markers as an alternative to g77-style record markers, and used them by default (at least on 64-bit systems).\ngfortran 4.2 introduced ifort-compatible record markers. These are now the default.All these kinds of record markers are supported by this package.In direct access mode, all records have the same, fixed size. This record size must be specified when opening the file. Records can be accessed in random order, by specifying the number of the record to be read/written in each READ or WRITE statement.  Currently it is assumed that records are stored in the file without any header or record marker.  This is compatible with the standard behaviour of gfortran and ifort."
 },
 
 {
     "location": "files.html#FortranFiles.FortranFile",
     "page": "Files",
     "title": "FortranFiles.FortranFile",
-    "category": "Type",
-    "text": "FortranFile(io::IO; kwargs...)\n\nWrap the given IO stream as a FortranFile containing Fortran \"unformatted\" (i.e. binary) data. The keyword arguments can be:\n\naccess for specifying the access mode; a String being one of\n\"sequential\": sequential access as in Fortran, where records have leading and trailing record markers. This is the default.\n\"direct\": direct access as in Fortran, where records have fixed length and can be accessed in random order. The \"recl\" keyword must be given to specify the record length. read and write operations on these files must use the rec keyword argument to specify which record to read/write.\nmarker: for specifying the type of record marker; one of\nRECMRK4B: 4-byte record markers (with support for subrecords) [default]\nRECMRK8B: 8-byte record markers\nThis is ignored for direct access files.\nrecl: for specifying the record length if access==\"direct\". The record length is counted in bytes and must be specified as an Integer.\nconvert: for specifying the byte-order of the file data; one of\n\"native\": use the host byte order [default]\n\"big-endian\": use big-endian byte-order\n\"little-endian\": use little-endian byte-order\n\nThe returned FortranFile can be used with Julia's read and write functions. See their documentation for more information.\n\n\n\nFortranFile(fn::String [, mode=\"r\" ]; kwargs...)\n\nOpen a file containing Fortran unformatted (i.e. binary) data for reading or writing, depending on mode which is used as in open. The keyword arguments are as in FortranFile(io::IO; kwargs...).\n\n\n\n"
+    "category": "type",
+    "text": "FortranFile(io::IO; kwargs...)\n\nWrap the given IO stream as a FortranFile containing Fortran \"unformatted\" (i.e. binary) data. The keyword arguments can be:\n\naccess for specifying the access mode; a String being one of\n\"sequential\": sequential access as in Fortran, where records have leading and trailing record markers. This is the default.\n\"direct\": direct access as in Fortran, where records have fixed length and can be accessed in random order. The \"recl\" keyword must be given to specify the record length. read and write operations on these files must use the rec keyword argument to specify which record to read/write.\nmarker: for specifying the type of record marker; one of\nRECMRK4B: 4-byte record markers (with support for subrecords) [default]\nRECMRK8B: 8-byte record markers\nThis is ignored for direct access files.\nrecl: for specifying the record length if access==\"direct\". The record length is counted in bytes and must be specified as an Integer.\nconvert: for specifying the byte-order of the file data; one of\n\"native\": use the host byte order [default]\n\"big-endian\": use big-endian byte-order\n\"little-endian\": use little-endian byte-order\n\nThe returned FortranFile can be used with Julia\'s read and write functions. See their documentation for more information.\n\n\n\nFortranFile(fn::String [, mode=\"r\" ]; kwargs...)\n\nOpen a file containing Fortran unformatted (i.e. binary) data for reading or writing, depending on mode which is used as in open. The keyword arguments are as in FortranFile(io::IO; kwargs...).\n\n\n\n"
 },
 
 {
@@ -84,7 +84,7 @@ var documenterSearchIndex = {"docs": [
     "location": "files.html#FortranFiles.rewind",
     "page": "Files",
     "title": "FortranFiles.rewind",
-    "category": "Function",
+    "category": "function",
     "text": "Re-position a FortranFile at its beginning.\n\n\n\n"
 },
 
@@ -149,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Datatypes",
     "title": "Datatypes",
     "category": "section",
-    "text": "When reading files created by a Fortran program, you need to be aware of the exact datatypes that were used to write the data. It is essential to specify the correct corresponding Julia datatype when using the read function provided by this package. Especially, note that the default Fortran INTEGER datatype on most systems corresponds to Julia's Int32 datatype, which differs from Julia's default Int datatype on 64-bit systems.Likewise, when using this package to write Julia data into files which should be readable by a Fortran program, you need to define your data with the correct datatypes, or convert them appropriately before using them in the write function."
+    "text": "When reading files created by a Fortran program, you need to be aware of the exact datatypes that were used to write the data. It is essential to specify the correct corresponding Julia datatype when using the read function provided by this package. Especially, note that the default Fortran INTEGER datatype on most systems corresponds to Julia\'s Int32 datatype, which differs from Julia\'s default Int datatype on 64-bit systems.Likewise, when using this package to write Julia data into files which should be readable by a Fortran program, you need to define your data with the correct datatypes, or convert them appropriately before using them in the write function."
 },
 
 {
@@ -157,14 +157,14 @@ var documenterSearchIndex = {"docs": [
     "page": "Datatypes",
     "title": "Type Correspondence",
     "category": "section",
-    "text": "The following table lists the Julia types which correspond to the standard Fortran types:Fortran type a.k.a. Julia type\nINTEGER(KIND=INT8) INTEGER*1 Int8\nINTEGER(KIND=INT16) INTEGER*2 Int16\nINTEGER(KIND=INT32) INTEGER*4 Int32\nINTEGER(KIND=INT64) INTEGER*8 Int64\nREAL(KIND=REAL32) REAL*4 Float32\nREAL(KIND=REAL64) REAL*8 Float64\nCOMPLEX(KIND=REAL32) COMPLEX*8 Complex64\nCOMPLEX(KIND=REAL64) COMPLEX*16 Complex128\nCHARACTER(LEN=N) CHARACTER*(N) FString{N}The first column lists the datatypes using the kind parameters according to the Fortran2008 standard. Most Fortran programs will likely use type declarations as in the second column, although these don't conform to the Fortran standard. If the Fortran program doesn't specify the kind, then the exact Fortran datatype also depends on the compiler options (which can influence the default kind of integers and reals).This package currently only supports one kind of CHARACTER data, namely ASCII characters with one byte of storage per character."
+    "text": "The following table lists the Julia types which correspond to the standard Fortran types:Fortran type a.k.a. Julia type\nINTEGER(KIND=INT8) INTEGER*1 Int8\nINTEGER(KIND=INT16) INTEGER*2 Int16\nINTEGER(KIND=INT32) INTEGER*4 Int32\nINTEGER(KIND=INT64) INTEGER*8 Int64\nREAL(KIND=REAL32) REAL*4 Float32\nREAL(KIND=REAL64) REAL*8 Float64\nCOMPLEX(KIND=REAL32) COMPLEX*8 Complex64\nCOMPLEX(KIND=REAL64) COMPLEX*16 Complex128\nCHARACTER(LEN=N) CHARACTER*(N) FString{N}The first column lists the datatypes using the kind parameters according to the Fortran2008 standard. Most Fortran programs will likely use type declarations as in the second column, although these don\'t conform to the Fortran standard. If the Fortran program doesn\'t specify the kind, then the exact Fortran datatype also depends on the compiler options (which can influence the default kind of integers and reals).This package currently only supports one kind of CHARACTER data, namely ASCII characters with one byte of storage per character."
 },
 
 {
     "location": "types.html#FortranFiles.FString",
     "page": "Datatypes",
     "title": "FortranFiles.FString",
-    "category": "Type",
+    "category": "type",
     "text": "FString{L}\n\nDatatype for reading and writing character strings from FortranFiles. The type parameter L signifies the length of the string. This is the equivalent of the Fortran datatype CHARACTER(len=L).\n\n\n\n"
 },
 
@@ -172,7 +172,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types.html#FortranFiles.FString-Tuple{Any,String}",
     "page": "Datatypes",
     "title": "FortranFiles.FString",
-    "category": "Method",
+    "category": "method",
     "text": "FString(L, s::String)\n\nConvert the Julia String s to an FString{L}. s must contain only ASCII characters. As in Fortran, the string will be padded with spaces or truncated in order to reach the desired length.\n\n\n\n"
 },
 
@@ -180,7 +180,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types.html#FortranFiles.trimstring",
     "page": "Datatypes",
     "title": "FortranFiles.trimstring",
-    "category": "Function",
+    "category": "function",
     "text": "trimstring(s::FString)\n\nConvert the FString s into a Julia String, where trailing spaces are removed. Use String(s) to keep the spaces.\n\n\n\n"
 },
 
@@ -188,7 +188,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types.html#FortranFiles.trimlen",
     "page": "Datatypes",
     "title": "FortranFiles.trimlen",
-    "category": "Function",
+    "category": "function",
     "text": "trimlen(s::FString)\n\nReturns the length of the FString s with trailing spaces ignored.\n\n\n\n"
 },
 
@@ -196,7 +196,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types.html#FortranFiles.trim",
     "page": "Datatypes",
     "title": "FortranFiles.trim",
-    "category": "Function",
+    "category": "function",
     "text": "trim(s::FString)\n\nReturns a truncated copy of the FString s where all trailing spaces are removed.\n\n\n\n"
 },
 
@@ -228,7 +228,7 @@ var documenterSearchIndex = {"docs": [
     "location": "read.html#Base.read",
     "page": "Reading Data",
     "title": "Base.read",
-    "category": "Function",
+    "category": "function",
     "text": "read(f::FortranFile [, spec [, spec [, ...]]])\nread(f::FortranFile, rec=N, [, spec [, spec [, ...]]])\n\nRead data from a FortranFile. Like the READ statement in Fortran, this reads a completely record, regardless of how man specs are given. Each spec can be:\n\na DataType for scalar values; e.g. Int32, Float64, FString{10}\na tuple of DataType and one or more integers, for reading arrays of the given size; e.g. (Int32,4,2) reads an Array{Int32}(4,2)\na tuple of DataType and a tuple of integers, as an alternative way of reading arrays; e.g. (Int32,(4,2)) does the same as the previous one\nan array, for reading into pre-allocated arrays; DataType and size of the array are implied through its Julia type.\n\nFor direct-access files, the number of the record to be read must be specified with the rec keyword (N=1 for the first record).\n\nReturn value:\n\nif no spec is given: nothing (the record is skipped over)\nif one spec is given: the scalar or array requested\nif more specs are given: a tuple of the scalars and arrays requested, in order\n\n\n\n"
 },
 
@@ -308,7 +308,7 @@ var documenterSearchIndex = {"docs": [
     "location": "write.html#Base.write",
     "page": "Writing Data",
     "title": "Base.write",
-    "category": "Function",
+    "category": "function",
     "text": "write(f::FortranFile, items...)\nwrite(f::FortranFile, rec=N, items...)\n\nWrite a data record to a FortranFile. Each item should be a scalar of a Fortran-compatible datatype (e.g. Int32, Float64, FString{10}), or an array of such scalars. If no items are given, an empty record is written. Returns the number of bytes written, not including the space taken up by the record markers.\n\nFor direct-access files, the number of the record to be written must be specified with the rec keyword (N=1 for the first record).\n\n\n\n"
 },
 
