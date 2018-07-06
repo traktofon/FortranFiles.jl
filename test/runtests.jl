@@ -71,6 +71,7 @@ end
 genalldata(rectyp_tests, byteorder_tests)
 
 include("codegen/jread.jl")
+include("codegen/jfread.jl")
 include("codegen/jskip.jl")
 include("codegen/jwrite.jl")
 
@@ -86,8 +87,9 @@ function cmpfiles(a::String, b::String)
    end
 end
 
-readdata(f::FortranFile{DirectAccess}) = _readdata(f, nelem)
-skipdata(f::FortranFile{DirectAccess}) = _readdata(f, 1)
+readdata(f::FortranFile{DirectAccess})  = _readdata(f, nelem)
+freaddata(f::FortranFile{DirectAccess}) = _freaddata(f, nelem)
+skipdata(f::FortranFile{DirectAccess})  = _readdata(f, 1)
 
 function _readdata(f, n::Integer)
    vari1  = read(f, rec=1,  Array{Int8}(n))
@@ -115,6 +117,37 @@ function _readdata(f, n::Integer)
    @test typeof(varc16)==Array{Complex128,1}
    @test sizeof(varc16)==sizeof(Complex128)*n
    varstr = read(f, rec=30,  Array{FString{11}}(n))
+   @test typeof(varstr)==Array{FString{11},1}
+   @test sizeof(varstr)==sizeof(FString{11})*n
+   return ( vari1, vari2, vari4, vari8, varr4, varr8, varc8, varc16, varstr )
+end
+
+function _freaddata(f, n::Integer)
+   @fread f rec=1 vari1::Array{Int8}(n)
+   @test typeof(vari1)==Array{Int8,1}
+   @test sizeof(vari1)==sizeof(Int8)*n
+   @fread f rec=2 vari2::Array{Int16}(n)
+   @test typeof(vari2)==Array{Int16,1}
+   @test sizeof(vari2)==sizeof(Int16)*n
+   @fread f rec=3 vari4::Array{Int32}(n)
+   @test typeof(vari4)==Array{Int32,1}
+   @test sizeof(vari4)==sizeof(Int32)*n
+   @fread f rec=4 vari8::Array{Int64}(n)
+   @test typeof(vari8)==Array{Int64,1}
+   @test sizeof(vari8)==sizeof(Int64)*n
+   @fread f rec=11 varr4::Array{Float32}(n)
+   @test typeof(varr4)==Array{Float32,1}
+   @test sizeof(varr4)==sizeof(Float32)*n
+   @fread f rec=12 varr8::Array{Float64}(n)
+   @test typeof(varr8)==Array{Float64,1}
+   @test sizeof(varr8)==sizeof(Float64)*n
+   @fread f rec=21 varc8::Array{Complex64}(n)
+   @test typeof(varc8)==Array{Complex64,1}
+   @test sizeof(varc8)==sizeof(Complex64)*n
+   @fread f rec=22 varc16::Array{Complex128}(n)
+   @test typeof(varc16)==Array{Complex128,1}
+   @test sizeof(varc16)==sizeof(Complex128)*n
+   @fread f rec=30 varstr::Array{FString{11}}(n)
    @test typeof(varstr)==Array{FString{11},1}
    @test sizeof(varstr)==sizeof(FString{11})*n
    return ( vari1, vari2, vari4, vari8, varr4, varr8, varc8, varc16, varstr )
@@ -175,7 +208,7 @@ end
 
 @testset "Testing records with $(rectest.desc), $(botest.name) byte order" for rectest in rectyp_tests, botest in byteorder_tests
 
-   local infile, outfile, data
+   local infile, outfile, data, data2
    tag = "$(rectest.tag)_$(botest.tag)"
    infilename  = "data_$(tag).bin"
    outfilename = "chck_$(tag).bin"
@@ -196,6 +229,12 @@ end
 
    @time @testset "Reading data" begin
       data = readdata(infile)
+   end
+
+   @time @testset "@fread'ing data " begin
+      rewind(infile)
+      data2 = freaddata(infile)
+      @test data == data2
    end
 
    @time @testset "Reading data with skipping" begin

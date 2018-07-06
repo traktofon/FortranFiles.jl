@@ -77,6 +77,34 @@ function jrddata(tasks::Vector{CodegenTask})
    return codes
 end
 
+function jfrdata(tasks::Vector{CodegenTask})
+   if isempty(tasks)
+      return [ "@fread f" ]
+   end
+   specs = String[]
+   tests = String[]
+   for task in tasks
+      typ = "$(task.jtype)"
+      if task.sz == (1,)
+         spec = "$(typ)"
+      else
+         dims = join( ("$dim" for dim in task.sz), "," )
+         spec = "Array{$(typ)}($dims)"
+         typ = "Array{$(typ),$(length(task.sz))}"
+      end
+      spec = "$(task.var)::$(spec)"
+      push!(specs, spec)
+      push!(tests, "@test typeof($(task.var)) == $(typ)")
+      push!(tests, "@test sizeof($(task.var)) == $(size(task))")
+   end
+   vars = join((task.var for task in tasks), ", ")
+   vartup = (length(tasks)==1) ? vars : "($(vars))"
+   specstr = join(specs, " ")
+   codes = [ "@fread f $(specstr)",
+             tests...,
+             "push!(data, $(vartup))" ]
+   return codes
+end
 
 function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
 # will generate (8+nstrlen)*(nscalar+3*narray) CodegenTasks
@@ -106,9 +134,11 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
    jwrf = open("jwrite.jl", "w")
    jrdf = open("jread.jl", "w")
    jskf = open("jskip.jl", "w")
+   jfrf = open("jfread.jl", "w")
    print(jwrf, "function writedata(f::FortranFile, data)\n")
    print(jrdf, "function readdata(f::FortranFile)\n   data = Any[]\n")
    print(jskf, "function skipdata(f::FortranFile)\n   data = Any[]\n")
+   print(jfrf, "function freaddata(f::FortranFile)\n   data = Any[]\n")
 
    tasks = CodegenTask[]
    itask = 1
@@ -139,15 +169,18 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
       for line in jwrdata(tg); println(jwrf, "   ", line); end
       for line in jrddata(tg); println(jrdf, "   ", line); end
       for line in jrddata(tg[1:rand(0:end-1)]); println(jskf, "   ", line); end
+      for line in jfrdata(tg); println(jfrf, "   ", line); end
    end
 
    print(jwrf, "end\n")
    print(jrdf, "   return data\nend\n")
    print(jskf, "   return data\nend\n")
+   print(jfrf, "   return data\nend\n")
    close(fwrf)
    close(jwrf)
    close(jrdf)
    close(jskf)
+   close(jfrf)
 end
 
 
