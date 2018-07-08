@@ -3,9 +3,9 @@
 A Julia package for reading/writing Fortran unformatted (i.e. binary) files.
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://traktofon.github.io/FortranFiles.jl/latest/)
-[![Build Status](https://travis-ci.org/traktofon/FortranFiles.jl.svg?branch=master)](https://travis-ci.org/traktofon/FortranFiles.jl)
-[![coveralls Status](https://coveralls.io/repos/traktofon/FortranFiles.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/traktofon/FortranFiles.jl?branch=master)
-[![codecov.io Status](http://codecov.io/github/traktofon/FortranFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/traktofon/FortranFiles.jl?branch=master)
+[![Build Status](https://travis-ci.org/traktofon/FortranFiles.jl.svg?branch=for07)](https://travis-ci.org/traktofon/FortranFiles.jl)
+[![coveralls Status](https://coveralls.io/repos/traktofon/FortranFiles.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/traktofon/FortranFiles.jl?branch=for07)
+[![codecov.io Status](http://codecov.io/github/traktofon/FortranFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/traktofon/FortranFiles.jl?branch=for07)
 
 Supported Julia versions (in the `for07` branch):
 - 0.7: working fine
