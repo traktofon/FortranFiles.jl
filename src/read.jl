@@ -72,17 +72,17 @@ end
 
 function read_spec(rec::Record, spec::Tuple{DataType,I} ) where {I<:Integer}
    T,n = spec
-   read_spec(rec, Array{T}(n))::Array{T,1}
+   read_spec(rec, Array{T}(undef, n))::Array{T,1}
 end
 
 function read_spec( rec::Record, spec::Tuple{DataType, Vararg{Integer,N}} ) where {N}
    T = spec[1]
    sz = spec[2:end]
-   read_spec(rec, Array{T}(sz...))::Array{T,N}
+   read_spec(rec, Array{T}(undef, sz...))::Array{T,N}
 end
 
 function read_spec( rec::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} ) where {N}
    T,sz = spec
-   read_spec(rec, Array{T}(sz...))::Array{T,N}
+   read_spec(rec, Array{T}(undef, sz...))::Array{T,N}
 end
 

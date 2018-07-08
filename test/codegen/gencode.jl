@@ -1,5 +1,6 @@
 import FortranFiles: FString
 import Base: size
+import Random: srand, shuffle!
 
 struct CodegenTask
    jtype :: DataType
@@ -39,7 +40,7 @@ end
 function jwrdata(tasks::Vector{CodegenTask})
    vars   = join((task.var for task in tasks), ", ")
    nbytes = sum(size(task) for task in tasks)
-   codes  = [ "$(vars) = shift!(data)",
+   codes  = [ "$(vars) = popfirst!(data)",
               "nwritten = write(f, $(vars))",
               "@test nwritten == $(nbytes)" ]
    return codes
@@ -58,9 +59,9 @@ function jrddata(tasks::Vector{CodegenTask})
          dims = join( ("$dim" for dim in task.sz), "," )
          mixdims = join( ( rand(["$dim", "Int64($dim)", "Int32($dim)", "Int16($dim)"]) for dim in task.sz), "," )
          if length(task.sz) == 1
-            spec = rand([ "Array{$(typ)}($(dims))", "($spec, $(mixdims))" ])
+            spec = rand([ "Array{$(typ)}(undef, $(dims))", "($spec, $(mixdims))" ])
          else
-            spec = rand([ "Array{$(typ)}($(dims))", "($spec, $(mixdims))", "($spec, ($(mixdims)))" ])
+            spec = rand([ "Array{$(typ)}(undef, $(dims))", "($spec, $(mixdims))", "($spec, ($(mixdims)))" ])
          end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
@@ -89,7 +90,7 @@ function jfrdata(tasks::Vector{CodegenTask})
          spec = "$(typ)"
       else
          dims = join( ("$dim" for dim in task.sz), "," )
-         spec = "Array{$(typ)}($dims)"
+         spec = "Array{$(typ)}(undef, $dims)"
          typ = "Array{$(typ),$(length(task.sz))}"
       end
       spec = "$(task.var)::$(spec)"
@@ -117,7 +118,7 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
       ( Int64,      "integer(kind=int64)"  ),
       ( Float32,    "real(kind=real32)"    ),
       ( Float64,    "real(kind=real64)"    ),
-      ( ComplexF32,  "complex(kind=real32)" ),
+      ( ComplexF32, "complex(kind=real32)" ),
       ( ComplexF64, "complex(kind=real64)" ) ]
    strtypes = [
       ( FString{n}, "character(len=$n)" ) for n in rand(1:200,nstrlen) ]

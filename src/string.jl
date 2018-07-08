@@ -43,7 +43,7 @@ convert(::Type{String}, s::FString{L}) where {L} = String(map(Char,s.data))
 
 
 function read( io::IO, t::Type{FString{L}} ) where {L}
-   s = read!(io, Array{Fchar}(L))
+   s = read!(io, Array{Fchar}(undef, L))
    FString{L}(s)
 end
 

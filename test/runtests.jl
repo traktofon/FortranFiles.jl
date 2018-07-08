@@ -92,62 +92,62 @@ freaddata(f::FortranFile{DirectAccess}) = _freaddata(f, nelem)
 skipdata(f::FortranFile{DirectAccess})  = _readdata(f, 1)
 
 function _readdata(f, n::Integer)
-   vari1  = read(f, rec=1,  Array{Int8}(n))
+   vari1  = read(f, rec=1,  Array{Int8}(undef, n))
    @test typeof(vari1)==Array{Int8,1}
    @test sizeof(vari1)==sizeof(Int8)*n
-   vari2  = read(f, rec=2,  Array{Int16}(n))
+   vari2  = read(f, rec=2,  Array{Int16}(undef, n))
    @test typeof(vari2)==Array{Int16,1}
    @test sizeof(vari2)==sizeof(Int16)*n
-   vari4  = read(f, rec=3,  Array{Int32}(n))
+   vari4  = read(f, rec=3,  Array{Int32}(undef, n))
    @test typeof(vari4)==Array{Int32,1}
    @test sizeof(vari4)==sizeof(Int32)*n
-   vari8  = read(f, rec=4,  Array{Int64}(n))
+   vari8  = read(f, rec=4,  Array{Int64}(undef, n))
    @test typeof(vari8)==Array{Int64,1}
    @test sizeof(vari8)==sizeof(Int64)*n
-   varr4  = read(f, rec=11, Array{Float32}(n))
+   varr4  = read(f, rec=11, Array{Float32}(undef, n))
    @test typeof(varr4)==Array{Float32,1}
    @test sizeof(varr4)==sizeof(Float32)*n
-   varr8  = read(f, rec=12, Array{Float64}(n))
+   varr8  = read(f, rec=12, Array{Float64}(undef, n))
    @test typeof(varr8)==Array{Float64,1}
    @test sizeof(varr8)==sizeof(Float64)*n
-   varc8  = read(f, rec=21, Array{ComplexF32}(n))
+   varc8  = read(f, rec=21, Array{ComplexF32}(undef, n))
    @test typeof(varc8)==Array{ComplexF32,1}
    @test sizeof(varc8)==sizeof(ComplexF32)*n
-   varc16 = read(f, rec=22, Array{ComplexF64}(n))
+   varc16 = read(f, rec=22, Array{ComplexF64}(undef, n))
    @test typeof(varc16)==Array{ComplexF64,1}
    @test sizeof(varc16)==sizeof(ComplexF64)*n
-   varstr = read(f, rec=30,  Array{FString{11}}(n))
+   varstr = read(f, rec=30,  Array{FString{11}}(undef, n))
    @test typeof(varstr)==Array{FString{11},1}
    @test sizeof(varstr)==sizeof(FString{11})*n
    return ( vari1, vari2, vari4, vari8, varr4, varr8, varc8, varc16, varstr )
 end
 
 function _freaddata(f, n::Integer)
-   @fread f rec=1 vari1::Array{Int8}(n)
+   @fread f rec=1 vari1::Array{Int8}(undef, n)
    @test typeof(vari1)==Array{Int8,1}
    @test sizeof(vari1)==sizeof(Int8)*n
-   @fread f rec=2 vari2::Array{Int16}(n)
+   @fread f rec=2 vari2::Array{Int16}(undef, n)
    @test typeof(vari2)==Array{Int16,1}
    @test sizeof(vari2)==sizeof(Int16)*n
-   @fread f rec=3 vari4::Array{Int32}(n)
+   @fread f rec=3 vari4::Array{Int32}(undef, n)
    @test typeof(vari4)==Array{Int32,1}
    @test sizeof(vari4)==sizeof(Int32)*n
-   @fread f rec=4 vari8::Array{Int64}(n)
+   @fread f rec=4 vari8::Array{Int64}(undef, n)
    @test typeof(vari8)==Array{Int64,1}
    @test sizeof(vari8)==sizeof(Int64)*n
-   @fread f rec=11 varr4::Array{Float32}(n)
+   @fread f rec=11 varr4::Array{Float32}(undef, n)
    @test typeof(varr4)==Array{Float32,1}
    @test sizeof(varr4)==sizeof(Float32)*n
-   @fread f rec=12 varr8::Array{Float64}(n)
+   @fread f rec=12 varr8::Array{Float64}(undef, n)
    @test typeof(varr8)==Array{Float64,1}
    @test sizeof(varr8)==sizeof(Float64)*n
-   @fread f rec=21 varc8::Array{Complex64}(n)
+   @fread f rec=21 varc8::Array{ComplexF32}(undef, n)
    @test typeof(varc8)==Array{ComplexF32,1}
    @test sizeof(varc8)==sizeof(ComplexF32)*n
-   @fread f rec=22 varc16::Array{Complex128}(n)
+   @fread f rec=22 varc16::Array{ComplexF64}(undef, n)
    @test typeof(varc16)==Array{ComplexF64,1}
    @test sizeof(varc16)==sizeof(ComplexF64)*n
-   @fread f rec=30 varstr::Array{FString{11}}(n)
+   @fread f rec=30 varstr::Array{FString{11}}(undef, n)
    @test typeof(varstr)==Array{FString{11},1}
    @test sizeof(varstr)==sizeof(FString{11})*n
    return ( vari1, vari2, vari4, vari8, varr4, varr8, varc8, varc16, varstr )
