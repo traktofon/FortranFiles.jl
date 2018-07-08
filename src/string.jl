@@ -41,6 +41,8 @@ FString(L, s::String) = convert( FString{L}, s )
 
 convert(::Type{String}, s::FString{L}) where {L} = String(map(Char,s.data))
 
+String(s::FString{L}) where {L} = convert(String, s)
+
 
 function read( io::IO, t::Type{FString{L}} ) where {L}
    s = read!(io, Array{Fchar}(undef, L))

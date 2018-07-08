@@ -192,16 +192,19 @@ end
    @test trimstring(fstr) == jstr
    @test trimlen(fstr) == N
    @test trim(fstr) == fstr
+   @test String(fstr) == jstr
    fstr80 = FString(80, jstr)
    @test typeof(fstr80) == FString{80}
    @test trimstring(fstr80) == jstr
    @test trimlen(fstr80) == N
    @test trim(fstr80) == fstr
+   @test String(fstr80) == rpad(jstr, 80)
    fstr8 = FString(8, jstr)
    @test typeof(fstr8) == FString{8}
    @test trimstring(fstr8) == jstr[1:8]
    @test trimlen(fstr8) == 8
    @test trim(fstr8) == fstr8
+   @test String(fstr8) == jstr[1:8]
    jstr = "Hällo Wörld!"
    @test_throws InexactError FString(80, jstr)
 end

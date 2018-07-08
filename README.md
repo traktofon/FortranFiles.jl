@@ -7,18 +7,18 @@ A Julia package for reading/writing Fortran unformatted (i.e. binary) files.
 [![coveralls Status](https://coveralls.io/repos/traktofon/FortranFiles.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/traktofon/FortranFiles.jl?branch=master)
 [![codecov.io Status](http://codecov.io/github/traktofon/FortranFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/traktofon/FortranFiles.jl?branch=master)
 
-Supported Julia versions:
-- 0.7: working, with tons of deprecations
-- 0.6: working fine
-- 0.5 and earlier: not supported
+Supported Julia versions (in the `for07` branch):
+- 0.7: working fine
+- 0.6 and earlier: not supported
 
 ## Quickstart ##
 
 Full documentation is available at <https://traktofon.github.io/FortranFiles.jl/latest/>.
 
 Installation:
-```julia
-Pkg.add("FortranFiles")
+```
+# type ] to enter package managing mode
+pkg> add FortranFiles#for07
 ```
 
 Example usage for reading files:
@@ -49,10 +49,10 @@ fstr = read(f, FString{20})
 jstr = trimstring(fstr)
 
 # reading a record with multiple data
-i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (ComplexF64,10,10))
+i, strings, zmatrix = read(f, Int32, (FString{20},10), (ComplexF64,10,10))
 
 # macro for reading a record where the size is not known ahead
-@fread f n::Int32 vec::Array{Float64}(n)
+@fread f n::Int32 vector::Array{Float64}(undef, n)
 
 # skipping over a record
 read(f)
