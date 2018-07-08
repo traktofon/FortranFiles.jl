@@ -78,7 +78,7 @@ read(lun) fstr
 #### Reading a record with multiple data
 
 ```julia
-i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (Complex128,10,10))
+i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (ComplexF64,10,10))
 ```
 corresponds to
 ```fortran

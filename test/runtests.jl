@@ -1,5 +1,5 @@
 using FortranFiles
-using Base.Test
+using Test
 using Base.Iterators: product
 
 import FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
@@ -11,7 +11,7 @@ const maxsubreclen = 2^15 - 9
 const RECMRK4Bwssr = FortranFiles.WithSubrecords(maxsubreclen)
 const RECMRK4Bwosr = FortranFiles.WithoutSubrecords{Int32}()
 const nelem        = 73
-const dareclen     = nelem*sizeof(Complex128)
+const dareclen     = nelem*sizeof(ComplexF64)
 
 # --- Definition of different types of record marker ---
 
@@ -110,12 +110,12 @@ function _readdata(f, n::Integer)
    varr8  = read(f, rec=12, Array{Float64}(n))
    @test typeof(varr8)==Array{Float64,1}
    @test sizeof(varr8)==sizeof(Float64)*n
-   varc8  = read(f, rec=21, Array{Complex64}(n))
-   @test typeof(varc8)==Array{Complex64,1}
-   @test sizeof(varc8)==sizeof(Complex64)*n
-   varc16 = read(f, rec=22, Array{Complex128}(n))
-   @test typeof(varc16)==Array{Complex128,1}
-   @test sizeof(varc16)==sizeof(Complex128)*n
+   varc8  = read(f, rec=21, Array{ComplexF32}(n))
+   @test typeof(varc8)==Array{ComplexF32,1}
+   @test sizeof(varc8)==sizeof(ComplexF32)*n
+   varc16 = read(f, rec=22, Array{ComplexF64}(n))
+   @test typeof(varc16)==Array{ComplexF64,1}
+   @test sizeof(varc16)==sizeof(ComplexF64)*n
    varstr = read(f, rec=30,  Array{FString{11}}(n))
    @test typeof(varstr)==Array{FString{11},1}
    @test sizeof(varstr)==sizeof(FString{11})*n
@@ -142,11 +142,11 @@ function _freaddata(f, n::Integer)
    @test typeof(varr8)==Array{Float64,1}
    @test sizeof(varr8)==sizeof(Float64)*n
    @fread f rec=21 varc8::Array{Complex64}(n)
-   @test typeof(varc8)==Array{Complex64,1}
-   @test sizeof(varc8)==sizeof(Complex64)*n
+   @test typeof(varc8)==Array{ComplexF32,1}
+   @test sizeof(varc8)==sizeof(ComplexF32)*n
    @fread f rec=22 varc16::Array{Complex128}(n)
-   @test typeof(varc16)==Array{Complex128,1}
-   @test sizeof(varc16)==sizeof(Complex128)*n
+   @test typeof(varc16)==Array{ComplexF64,1}
+   @test sizeof(varc16)==sizeof(ComplexF64)*n
    @fread f rec=30 varstr::Array{FString{11}}(n)
    @test typeof(varstr)==Array{FString{11},1}
    @test sizeof(varstr)==sizeof(FString{11})*n

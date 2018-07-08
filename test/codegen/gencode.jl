@@ -1,7 +1,7 @@
 import FortranFiles: FString
 import Base: size
 
-immutable CodegenTask
+struct CodegenTask
    jtype :: DataType
    ftype :: String
    sz    :: Dims
@@ -117,8 +117,8 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
       ( Int64,      "integer(kind=int64)"  ),
       ( Float32,    "real(kind=real32)"    ),
       ( Float64,    "real(kind=real64)"    ),
-      ( Complex64,  "complex(kind=real32)" ),
-      ( Complex128, "complex(kind=real64)" ) ]
+      ( ComplexF32,  "complex(kind=real32)" ),
+      ( ComplexF64, "complex(kind=real64)" ) ]
    strtypes = [
       ( FString{n}, "character(len=$n)" ) for n in rand(1:200,nstrlen) ]
    types = vcat(numtypes, strtypes)
