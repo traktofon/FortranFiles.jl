@@ -84,16 +84,23 @@ function jfrdata(tasks::Vector{CodegenTask})
    end
    specs = String[]
    tests = String[]
+   decls = String[]
    for task in tasks
       typ = "$(task.jtype)"
       if task.sz == (1,)
-         spec = "$(typ)"
+         spec = "$(task.var)::$(typ)"
       else
          dims = join( ("$dim" for dim in task.sz), "," )
          spec = "Array{$(typ)}(undef, $dims)"
+         if rand(Bool)
+            decl = "$(task.var) = $(spec)"
+            push!(decls, decl)
+            spec = "$(task.var)"
+         else
+            spec = "$(task.var)::$(spec)"
+         end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
-      spec = "$(task.var)::$(spec)"
       push!(specs, spec)
       push!(tests, "@test typeof($(task.var)) == $(typ)")
       push!(tests, "@test sizeof($(task.var)) == $(size(task))")
@@ -101,7 +108,8 @@ function jfrdata(tasks::Vector{CodegenTask})
    vars = join((task.var for task in tasks), ", ")
    vartup = (length(tasks)==1) ? vars : "($(vars))"
    specstr = join(specs, " ")
-   codes = [ "@fread f $(specstr)",
+   codes = [ decls...,
+             "@fread f $(specstr)",
              tests...,
              "push!(data, $(vartup))" ]
    return codes
