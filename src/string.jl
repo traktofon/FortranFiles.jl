@@ -39,9 +39,8 @@ As in Fortran, the string will be padded with spaces or truncated in order to re
 """
 FString(L, s::String) = convert( FString{L}, s )
 
-convert(::Type{String}, s::FString{L}) where {L} = String(map(Char,s.data))
-
-String(s::FString{L}) where {L} = convert(String, s)
+String(s::FString{L}) where {L} = String(map(Char,s.data))
+convert(::Type{String}, s::FString{L}) where {L} = String(s)
 
 
 function read( io::IO, t::Type{FString{L}} ) where {L}
