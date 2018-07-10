@@ -91,13 +91,13 @@ read(lun) i,strings,matrix
 #### Reading a record where the size is not known ahead
 
 ```julia
-@fread f n::Int32 vector::Array{Float64}(undef, n)
+@fread f n::Int32 vector::(Float64,n)
 ```
 corresponds to
 ```fortran
 integer(kind=int32)::n,i
 read(kind=real64),dimension(*)::vector ! assume already allocated
-read(lun) n,(vector(i), i=1,n)
+read(lun) n,(vector(i),i=1,n)
 ```
 
 #### Skipping over a record

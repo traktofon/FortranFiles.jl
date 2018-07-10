@@ -6,8 +6,11 @@ A single `@fread` call will process a single data record from the file.
 Each `spec` can be:
 * a `var::T` declaration, which will read data of the type `T` from the
   file, and assign it to the variable `var`. `T` can be one of the usual
-  Fortran scalar datatypes, or an initializer for an array containing such data
-  (e.g. `Array{Float64}(undef,n)`)
+  Fortran scalar datatypes.
+* a `var::(T,dims...)` declaration, where `T` is a scalar datatype and
+  `dims...` is a series of integers. This reads an array of the specified
+  datatype and dimensions, and assigns it to the variable `var`.
+* `var::Array{T}(undef,dims...)` as an explicit form for reading arrays
 * a variable name, which must refer to a pre-allocated array.
 Note that a `spec` can refer to variables assigned by previous specs.
 The `rec` keyword must be given iff `f` refers to a direct-access file,
@@ -16,7 +19,7 @@ and specifies which record to read.
 
 Example:
 
-    @fread f n::Int32 x::Array{Float64}(undef,n)
+    @fread f n::Int32 x::(Float64,n)
 
 This reads a single `Int32`, assigns it to `n`, and then reads a `Float64` array
 with `n` elements and assigns it to `x`. Such a record can not be processed by

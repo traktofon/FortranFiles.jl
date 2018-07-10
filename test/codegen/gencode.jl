@@ -93,13 +93,20 @@ function jfrdata(tasks::Vector{CodegenTask})
          spec = "$(task.var)::$(typ)"
       else
          dims = join( ("$dim" for dim in task.sz), "," )
-         spec = "Array{$(typ)}(undef, $dims)"
-         if rand(Bool)
-            decl = "$(task.var) = $(spec)"
+         choice = rand(1:3)
+         if choice==1
+            # read into preallocated array
+            decl = "$(task.var) = Array{$(typ)}(undef, $(dims))"
             push!(decls, decl)
             spec = "$(task.var)"
+         elseif choice==2
+            # read into freshly constructed array
+            spec = "$(task.var)::Array{$(typ)}(undef, $(dims))"
          else
-            spec = "$(task.var)::$(spec)"
+            # ditto, using short syntax (T,n,m) or (T,(n,m))
+            spec = ( (length(task.sz)==1) || rand(Bool) ) ?
+                   "$(task.var)::($(typ),$(dims))" :
+                   "$(task.var)::($(typ),($(dims)))"
          end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
