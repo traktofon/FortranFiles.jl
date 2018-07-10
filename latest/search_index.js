@@ -237,7 +237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "FortranFiles.@fread",
     "category": "macro",
-    "text": "@fread f [ rec=N ] [ spec ... ]\n\nMacro interface for reading data from the FortranFile f. A single @fread call will process a single data record from the file. Each spec can be:\n\na var::T declaration, which will read data of the type T from the file, and assign it to the variable var. T can be one of the usual Fortran scalar datatypes, or an initializer for an array containing such data (e.g. Array{Float64}(undef,n))\na variable name, which must refer to a pre-allocated array.\n\nNote that a spec can refer to variables assigned by previous specs. The rec keyword must be given iff f refers to a direct-access file, and specifies which record to read.\n\nExample:\n\n@fread f n::Int32 x::Array{Float64}(undef,n)\n\nThis reads a single Int32, assigns it to n, and then reads a Float64 array with n elements and assigns it to x. Such a record can not be processed by the function-based read interface. The equivalent call would be\n\nn, x = read(f, Int32, (Float64,n))\n\nbut this can\'t work because n is only assigned after the read statement is processed. The macro interface is provided to cover such cases.\n\n\n\n"
+    "text": "@fread f [ rec=N ] [ spec ... ]\n\nMacro interface for reading data from the FortranFile f. A single @fread call will process a single data record from the file. Each spec can be:\n\na var::T declaration, which will read data of the type T from the file, and assign it to the variable var. T can be one of the usual Fortran scalar datatypes.\na var::(T,dims...) declaration, where T is a scalar datatype and dims... is a series of integers. This reads an array of the specified datatype and dimensions, and assigns it to the variable var.\nvar::Array{T}(undef,dims...) as an explicit form for reading arrays\na variable name, which must refer to a pre-allocated array.\n\nNote that a spec can refer to variables assigned by previous specs. The rec keyword must be given iff f refers to a direct-access file, and specifies which record to read.\n\nExample:\n\n@fread f n::Int32 x::(Float64,n)\n\nThis reads a single Int32, assigns it to n, and then reads a Float64 array with n elements and assigns it to x. Such a record can not be processed by the function-based read interface. The equivalent call would be\n\nn, x = read(f, Int32, (Float64,n))\n\nbut this can\'t work because n is only assigned after the read statement is processed. The macro interface is provided to cover such cases.\n\n\n\n"
 },
 
 {
@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Reading a record where the size is not known ahead",
     "category": "section",
-    "text": "@fread f n::Int32 vector::Array{Float64}(undef, n)corresponds tointeger(kind=int32)::n,i\nread(kind=real64),dimension(*)::vector ! assume already allocated\nread(lun) n,(vector(i), i=1,n)"
+    "text": "@fread f n::Int32 vector::(Float64,n)corresponds tointeger(kind=int32)::n,i\nread(kind=real64),dimension(*)::vector ! assume already allocated\nread(lun) n,(vector(i),i=1,n)"
 },
 
 {
