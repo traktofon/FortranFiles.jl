@@ -6,7 +6,7 @@ import Base: read
     read(f::FortranFile, rec=N, [, spec [, spec [, ...]]])
 
 Read data from a `FortranFile`. Like the READ statement in Fortran, this
-reads a completely record, regardless of how man `spec`s are given. Each
+reads a complete record, regardless of how man `spec`s are given. Each
 `spec` can be:
 * a `DataType` for scalar values; e.g. `Int32`, `Float64`, `FString{10}`
 * a tuple of `DataType` and one or more integers, for reading arrays of
@@ -20,7 +20,7 @@ For direct-access files, the number of the record to be read must be
 specified with the `rec` keyword (N=1 for the first record).
 
 Return value:
-* if no `spec` is given: nothing (the record is skipped over)
+* if no `spec` is given: `nothing` (the record is skipped over)
 * if one `spec` is given: the scalar or array requested
 * if more `spec`s are given: a tuple of the scalars and arrays requested, in order
 """

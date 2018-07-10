@@ -35,6 +35,12 @@ Pages = [
 ]
 ```
 
+This documentation uses julia-0.7 syntax. On julia-0.6, either use `using Compat`
+or make the following adjustments:
+* `ComplexF64` -> `Complex128` and `ComplexF32` -> `Complex64`
+* drop `undef` from Array constructors
+
+
 ## Acknowledgments
 
 The `FortranFiles.jl` logo has been produced with help of the
