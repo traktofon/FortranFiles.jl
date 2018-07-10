@@ -1,7 +1,7 @@
-import Compat: Test, ComplexF32, ComplexF64, undef, popfirst!
+import Compat: ComplexF32, ComplexF64, undef, popfirst!
 
 using FortranFiles
-using Test
+using Compat.Test
 using Base.Iterators: product
 
 import FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
