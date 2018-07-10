@@ -59,7 +59,7 @@ jstr = trimstring(fstr)
 i, strings, zmatrix = read(f, Int32, (FString{20},10), (ComplexF64,10,10))
 
 # macro for reading a record where the size is not known ahead
-@fread f n::Int32 vector::Array{Float64}(undef, n)
+@fread f n::Int32 vector::(Float64,n)
 
 # skipping over a record
 read(f)
