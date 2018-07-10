@@ -1,3 +1,4 @@
+import Compat: undef
 import Base: read
 
 """

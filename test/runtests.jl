@@ -1,3 +1,5 @@
+import Compat: Test, ComplexF32, ComplexF64, undef, popfirst!
+
 using FortranFiles
 using Test
 using Base.Iterators: product

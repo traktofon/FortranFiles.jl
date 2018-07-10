@@ -1,3 +1,5 @@
+import Compat: Random, ComplexF32, ComplexF64
+
 import FortranFiles: FString
 import Base: size
 import Random: srand, shuffle!
