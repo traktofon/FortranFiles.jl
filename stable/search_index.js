@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Documentation",
     "category": "section",
-    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"tests.md\",\n   \"theindex.md\"\n]"
+    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"tests.md\",\n   \"theindex.md\"\n]This documentation uses julia-0.7 syntax. On julia-0.6, either use using Compat or make the following adjustments:ComplexF64 -> Complex128 and ComplexF32 -> Complex64\ndrop undef from Array constructors"
 },
 
 {
@@ -157,7 +157,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Datatypes",
     "title": "Type Correspondence",
     "category": "section",
-    "text": "The following table lists the Julia types which correspond to the standard Fortran types:Fortran type a.k.a. Julia type\nINTEGER(KIND=INT8) INTEGER*1 Int8\nINTEGER(KIND=INT16) INTEGER*2 Int16\nINTEGER(KIND=INT32) INTEGER*4 Int32\nINTEGER(KIND=INT64) INTEGER*8 Int64\nREAL(KIND=REAL32) REAL*4 Float32\nREAL(KIND=REAL64) REAL*8 Float64\nCOMPLEX(KIND=REAL32) COMPLEX*8 Complex64\nCOMPLEX(KIND=REAL64) COMPLEX*16 Complex128\nCHARACTER(LEN=N) CHARACTER*(N) FString{N}The first column lists the datatypes using the kind parameters according to the Fortran2008 standard. Most Fortran programs will likely use type declarations as in the second column, although these don\'t conform to the Fortran standard. If the Fortran program doesn\'t specify the kind, then the exact Fortran datatype also depends on the compiler options (which can influence the default kind of integers and reals).This package currently only supports one kind of CHARACTER data, namely ASCII characters with one byte of storage per character."
+    "text": "The following table lists the Julia types which correspond to the standard Fortran types:Fortran type a.k.a. Julia type\nINTEGER(KIND=INT8) INTEGER*1 Int8\nINTEGER(KIND=INT16) INTEGER*2 Int16\nINTEGER(KIND=INT32) INTEGER*4 Int32\nINTEGER(KIND=INT64) INTEGER*8 Int64\nREAL(KIND=REAL32) REAL*4 Float32\nREAL(KIND=REAL64) REAL*8 Float64\nCOMPLEX(KIND=REAL32) COMPLEX*8 ComplexF32\nCOMPLEX(KIND=REAL64) COMPLEX*16 ComplexF64\nCHARACTER(LEN=N) CHARACTER*(N) FString{N}The first column lists the datatypes using the kind parameters according to the Fortran2008 standard. Most Fortran programs will likely use type declarations as in the second column, although these don\'t conform to the Fortran standard. If the Fortran program doesn\'t specify the kind, then the exact Fortran datatype also depends on the compiler options (which can influence the default kind of integers and reals).This package currently only supports one kind of CHARACTER data, namely ASCII characters with one byte of storage per character."
 },
 
 {
@@ -229,7 +229,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Base.read",
     "category": "function",
-    "text": "read(f::FortranFile [, spec [, spec [, ...]]])\nread(f::FortranFile, rec=N, [, spec [, spec [, ...]]])\n\nRead data from a FortranFile. Like the READ statement in Fortran, this reads a completely record, regardless of how man specs are given. Each spec can be:\n\na DataType for scalar values; e.g. Int32, Float64, FString{10}\na tuple of DataType and one or more integers, for reading arrays of the given size; e.g. (Int32,4,2) reads an Array{Int32}(4,2)\na tuple of DataType and a tuple of integers, as an alternative way of reading arrays; e.g. (Int32,(4,2)) does the same as the previous one\nan array, for reading into pre-allocated arrays; DataType and size of the array are implied through its Julia type.\n\nFor direct-access files, the number of the record to be read must be specified with the rec keyword (N=1 for the first record).\n\nReturn value:\n\nif no spec is given: nothing (the record is skipped over)\nif one spec is given: the scalar or array requested\nif more specs are given: a tuple of the scalars and arrays requested, in order\n\n\n\n"
+    "text": "read(f::FortranFile [, spec [, spec [, ...]]])\nread(f::FortranFile, rec=N, [, spec [, spec [, ...]]])\n\nRead data from a FortranFile. Like the READ statement in Fortran, this reads a complete record, regardless of how man specs are given. Each spec can be:\n\na DataType for scalar values; e.g. Int32, Float64, FString{10}\na tuple of DataType and one or more integers, for reading arrays of the given size; e.g. (Int32,4,2) reads an Array{Int32} of size (4,2)\na tuple of DataType and a tuple of integers, as an alternative way of reading arrays; e.g. (Int32,(4,2)) does the same as the previous one\nan array, for reading into pre-allocated arrays; DataType and size of the array are implied through its Julia type.\n\nFor direct-access files, the number of the record to be read must be specified with the rec keyword (N=1 for the first record).\n\nReturn value:\n\nif no spec is given: nothing (the record is skipped over)\nif one spec is given: the scalar or array requested\nif more specs are given: a tuple of the scalars and arrays requested, in order\n\n\n\n"
 },
 
 {
@@ -237,7 +237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "FortranFiles.@fread",
     "category": "macro",
-    "text": "@fread f [ rec=N ] [ spec ... ]\n\nMacro interface for reading data from the FortranFile f. A single @fread call will process a single data record from the file. Each spec can be:\n\na var::T declaration, which will read data of the type T from the file, and assign it to the variable var. T can be one of the usual Fortran scalar datatypes, or an array containing such data.\na variable name, which must refer to a pre-allocated array.\n\nNote that a spec can refer to variables assigned by previous specs. The rec keyword must be given iff f refers to a direct-access file, and specifies which record to read.\n\nExample:\n\n@fread f n::Int32 x::Array{Float64}(n)\n\nThis reads a single Int32, assigns it to n, and then reads a Float64 array with n elements and assigns it to x. Such a record can not be processed by the function-based read interface. The equivalent call would be\n\nn, x = read(f, Int32, (Float64,n))\n\nbut this can\'t work because n is only assigned after the read statement is processed. The macro interface is provided to cover such cases.\n\n\n\n"
+    "text": "@fread f [ rec=N ] [ spec ... ]\n\nMacro interface for reading data from the FortranFile f. A single @fread call will process a single data record from the file. Each spec can be:\n\na var::T declaration, which will read data of the type T from the file, and assign it to the variable var. T can be one of the usual Fortran scalar datatypes.\na var::(T,dims...) declaration, where T is a scalar datatype and dims... is a series of integers. This reads an array of the specified datatype and dimensions, and assigns it to the variable var.\nvar::Array{T}(undef,dims...) as an explicit form for reading arrays\na variable name, which must refer to a pre-allocated array.\n\nNote that a spec can refer to variables assigned by previous specs. The rec keyword must be given iff f refers to a direct-access file, and specifies which record to read.\n\nExample:\n\n@fread f n::Int32 x::(Float64,n)\n\nThis reads a single Int32, assigns it to n, and then reads a Float64 array with n elements and assigns it to x. Such a record can not be processed by the function-based read interface. The equivalent call would be\n\nn, x = read(f, Int32, (Float64,n))\n\nbut this can\'t work because n is only assigned after the read statement is processed. The macro interface is provided to cover such cases.\n\n\n\n"
 },
 
 {
@@ -293,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Reading a record with multiple data",
     "category": "section",
-    "text": "i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (Complex128,10,10))corresponds tointeger(kind=int32)::i\ncharacter(len=20),dimension(10)::strings\ncomplex(kind=real64),dimension(10,10)::zmatrix\nread(lun) i,strings,matrix"
+    "text": "i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (ComplexF64,10,10))corresponds tointeger(kind=int32)::i\ncharacter(len=20),dimension(10)::strings\ncomplex(kind=real64),dimension(10,10)::zmatrix\nread(lun) i,strings,matrix"
 },
 
 {
@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reading Data",
     "title": "Reading a record where the size is not known ahead",
     "category": "section",
-    "text": "@fread f n::Int32 vec::Array{Float64}(n)corresponds tointeger(kind=int32)::n,i\nread(kind=real64),dimension(*)::vec ! assume already allocated\nread(lun) n,(vec(i), i=1,n)"
+    "text": "@fread f n::Int32 vector::(Float64,n)corresponds tointeger(kind=int32)::n,i\nread(kind=real64),dimension(*)::vector ! assume already allocated\nread(lun) n,(vector(i),i=1,n)"
 },
 
 {
