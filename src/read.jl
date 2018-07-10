@@ -9,7 +9,7 @@ reads a completely record, regardless of how man `spec`s are given. Each
 `spec` can be:
 * a `DataType` for scalar values; e.g. `Int32`, `Float64`, `FString{10}`
 * a tuple of `DataType` and one or more integers, for reading arrays of
-  the given size; e.g. `(Int32,4,2)` reads an `Array{Int32}(4,2)`
+  the given size; e.g. `(Int32,4,2)` reads an `Array{Int32}` of size (4,2)
 * a tuple of `DataType` and a tuple of integers, as an alternative way
   of reading arrays; e.g. `(Int32,(4,2))` does the same as the previous one
 * an array, for reading into pre-allocated arrays; `DataType` and size
@@ -72,17 +72,17 @@ end
 
 function read_spec(rec::Record, spec::Tuple{DataType,I} ) where {I<:Integer}
    T,n = spec
-   read_spec(rec, Array{T}(n))::Array{T,1}
+   read_spec(rec, Array{T}(undef, n))::Array{T,1}
 end
 
 function read_spec( rec::Record, spec::Tuple{DataType, Vararg{Integer,N}} ) where {N}
    T = spec[1]
    sz = spec[2:end]
-   read_spec(rec, Array{T}(sz...))::Array{T,N}
+   read_spec(rec, Array{T}(undef, sz...))::Array{T,N}
 end
 
 function read_spec( rec::Record, spec::Tuple{DataType, Tuple{Vararg{Integer,N}}} ) where {N}
    T,sz = spec
-   read_spec(rec, Array{T}(sz...))::Array{T,N}
+   read_spec(rec, Array{T}(undef, sz...))::Array{T,N}
 end
 

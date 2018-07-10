@@ -1,7 +1,8 @@
 import FortranFiles: FString
 import Base: size
+import Random: srand, shuffle!
 
-immutable CodegenTask
+struct CodegenTask
    jtype :: DataType
    ftype :: String
    sz    :: Dims
@@ -39,7 +40,7 @@ end
 function jwrdata(tasks::Vector{CodegenTask})
    vars   = join((task.var for task in tasks), ", ")
    nbytes = sum(size(task) for task in tasks)
-   codes  = [ "$(vars) = shift!(data)",
+   codes  = [ "$(vars) = popfirst!(data)",
               "nwritten = write(f, $(vars))",
               "@test nwritten == $(nbytes)" ]
    return codes
@@ -58,9 +59,9 @@ function jrddata(tasks::Vector{CodegenTask})
          dims = join( ("$dim" for dim in task.sz), "," )
          mixdims = join( ( rand(["$dim", "Int64($dim)", "Int32($dim)", "Int16($dim)"]) for dim in task.sz), "," )
          if length(task.sz) == 1
-            spec = rand([ "Array{$(typ)}($(dims))", "($spec, $(mixdims))" ])
+            spec = rand([ "Array{$(typ)}(undef, $(dims))", "($spec, $(mixdims))" ])
          else
-            spec = rand([ "Array{$(typ)}($(dims))", "($spec, $(mixdims))", "($spec, ($(mixdims)))" ])
+            spec = rand([ "Array{$(typ)}(undef, $(dims))", "($spec, $(mixdims))", "($spec, ($(mixdims)))" ])
          end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
@@ -83,16 +84,23 @@ function jfrdata(tasks::Vector{CodegenTask})
    end
    specs = String[]
    tests = String[]
+   decls = String[]
    for task in tasks
       typ = "$(task.jtype)"
       if task.sz == (1,)
-         spec = "$(typ)"
+         spec = "$(task.var)::$(typ)"
       else
          dims = join( ("$dim" for dim in task.sz), "," )
-         spec = "Array{$(typ)}($dims)"
+         spec = "Array{$(typ)}(undef, $dims)"
+         if rand(Bool)
+            decl = "$(task.var) = $(spec)"
+            push!(decls, decl)
+            spec = "$(task.var)"
+         else
+            spec = "$(task.var)::$(spec)"
+         end
          typ = "Array{$(typ),$(length(task.sz))}"
       end
-      spec = "$(task.var)::$(spec)"
       push!(specs, spec)
       push!(tests, "@test typeof($(task.var)) == $(typ)")
       push!(tests, "@test sizeof($(task.var)) == $(size(task))")
@@ -100,7 +108,8 @@ function jfrdata(tasks::Vector{CodegenTask})
    vars = join((task.var for task in tasks), ", ")
    vartup = (length(tasks)==1) ? vars : "($(vars))"
    specstr = join(specs, " ")
-   codes = [ "@fread f $(specstr)",
+   codes = [ decls...,
+             "@fread f $(specstr)",
              tests...,
              "push!(data, $(vartup))" ]
    return codes
@@ -117,8 +126,8 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
       ( Int64,      "integer(kind=int64)"  ),
       ( Float32,    "real(kind=real32)"    ),
       ( Float64,    "real(kind=real64)"    ),
-      ( Complex64,  "complex(kind=real32)" ),
-      ( Complex128, "complex(kind=real64)" ) ]
+      ( ComplexF32, "complex(kind=real32)" ),
+      ( ComplexF64, "complex(kind=real64)" ) ]
    strtypes = [
       ( FString{n}, "character(len=$n)" ) for n in rand(1:200,nstrlen) ]
    types = vcat(numtypes, strtypes)

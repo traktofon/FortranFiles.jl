@@ -78,7 +78,7 @@ read(lun) fstr
 #### Reading a record with multiple data
 
 ```julia
-i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (Complex128,10,10))
+i, strings, zmatrix = read(f, Int32, (Fstring{20},10), (ComplexF64,10,10))
 ```
 corresponds to
 ```fortran
@@ -91,13 +91,13 @@ read(lun) i,strings,matrix
 #### Reading a record where the size is not known ahead
 
 ```julia
-@fread f n::Int32 vec::Array{Float64}(n)
+@fread f n::Int32 vector::Array{Float64}(undef, n)
 ```
 corresponds to
 ```fortran
 integer(kind=int32)::n,i
-read(kind=real64),dimension(*)::vec ! assume already allocated
-read(lun) n,(vec(i), i=1,n)
+read(kind=real64),dimension(*)::vector ! assume already allocated
+read(lun) n,(vector(i), i=1,n)
 ```
 
 #### Skipping over a record
