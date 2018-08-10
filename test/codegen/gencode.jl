@@ -2,7 +2,7 @@ import Compat: Random, ComplexF32, ComplexF64
 
 import FortranFiles: FString
 import Base: size
-import Random: srand, shuffle!
+import Random
 
 struct CodegenTask
    jtype :: DataType
@@ -126,7 +126,11 @@ end
 
 function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
 # will generate (8+nstrlen)*(nscalar+3*narray) CodegenTasks
-   srand(seed)
+   @static if VERSION >=v"0.7.0"
+      Random.seed!(seed)
+   else
+      Random.srand(seed)
+   end
 
    numtypes = [
       ( Int8 ,      "integer(kind=int8)"   ),
@@ -173,7 +177,7 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
       end
    end
    
-   shuffle!(tasks)
+   Random.shuffle!(tasks)
    taskgroups = Vector{CodegenTask}[]
    itask = 1
    while itask <= length(tasks)
