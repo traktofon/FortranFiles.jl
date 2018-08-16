@@ -25,9 +25,6 @@ addons:
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc; fi
 
-script:
-  - julia -e 'if VERSION >= v"0.7.0-"; using Pkg; end; Pkg.clone(pwd()); Pkg.build("FortranFiles"); Pkg.test("FortranFiles"; coverage=true)'
-
 after_success:
   # build and deploy documentation
   - if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_JULIA_VERSION" == "0.6" ]]; then
