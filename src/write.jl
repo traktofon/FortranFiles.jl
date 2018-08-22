@@ -82,9 +82,11 @@ write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{Int8,N} ) where {N
 write_var( rec::RecordWithSubrecords{NOCONV}, arr::Array{FString{L},N} ) where {L,N} = write_fstrings(rec, arr)
 write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{FString{L},N} ) where {L,N,R} = write_fstrings(rec, arr)
 
-check_fortran_type(x::Array{T}) where {T} = check_fortran_type(x[1])
-check_fortran_type(x::FString) = true
-check_fortran_type(x::T) where {T} = isbitstype(T)
+check_fortran_type(x::Array) = _check_fortran_type(eltype(x))
+check_fortran_type(x)        = _check_fortran_type(typeof(x))
+
+_check_fortran_type(::Type{FString{L}}) where L = true
+_check_fortran_type(T::Type) = isbitstype(T)
 
 function sizeof_var( var::T ) where {T}
    check_fortran_type(var) || error("cannot serialize datatype $T for Fortran")
