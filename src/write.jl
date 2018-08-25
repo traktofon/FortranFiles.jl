@@ -89,7 +89,7 @@ _check_fortran_type(::Type{FString{L}}) where L = true
 _check_fortran_type(T::Type) = isbitstype(T)
 
 function sizeof_var( var::T ) where {T}
-   check_fortran_type(var) || error("cannot serialize datatype $T for Fortran")
+   check_fortran_type(var) || throwftnio("cannot serialize datatype $T for Fortran")
    sizeof(var)
 end
 

@@ -186,6 +186,14 @@ end
 
 # --- TESTING STARTS HERE ---
 
+@testset "Inhomogeneous arrays" begin
+   open("/dev/null", "w") do null
+      ff = FortranFile(null)
+      inhomA = Integer[1, big(2)]
+      @test_throws FortranIOError write(ff, inhomA)
+   end
+end
+
 @testset "Strings" begin
    jstr = "Hello World!"
    N    = length(jstr)
