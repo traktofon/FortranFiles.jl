@@ -27,7 +27,7 @@ or from julia-0.7:
 pkg> add FortranFiles
 ```
 
-The following examples use julia-0.7 syntax. They also work in julia-0.6 with `using Compat`.
+The following examples use julia-0.7/1.0 syntax. They also work in julia-0.6 with `using Compat`.
 
 Example usage for reading files:
 ```julia

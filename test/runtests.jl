@@ -210,48 +210,63 @@ end
          @test_throws FortranFilesError write(fdir, rec=1, zeros(11))
 
          # sequential access files
-         fseq = FortranFile(io)
-         # with record number
-         @test_throws MethodError write(fseq, rec=1, zeros(10))
-         # inhomogeneous array, see PR#4
-         inhomA = Integer[1, big(2)]
-         @test_throws FortranFilesError write(fseq, inhomA)
+         for recmrk in (RECMRK4B,RECMRK4Bwosr)
+            fseq = FortranFile(io, marker=recmrk)
+            # with record number
+            @test_throws MethodError write(fseq, rec=1, zeros(10))
+            # inhomogeneous array, see PR#4
+            inhomA = Integer[1, big(2)]
+            @test_throws FortranFilesError write(fseq, inhomA)
+         end
       end
    end
 
    @testset "Reading" begin
-      let
+      let A=ones(10), B=2A
          # direct access files
          data = UInt8[]
          io = IOBuffer(data, write=true)
          fdir = FortranFile(io, access="direct", recl=80)
-         write(fdir, rec=1, ones(10))
+         write(fdir, rec=1, A)
+         write(fdir, rec=2, B)
          close(fdir)
          io = IOBuffer(data)
          fdir = FortranFile(io, access="direct", recl=80)
          # no record number
-         @test_throws FortranFilesError A = read(fdir, (Float64,10))
+         @test_throws FortranFilesError AA = read(fdir, (Float64,10))
          # macro version
-         @test_throws FortranFilesError @fread fdir A::(Float64,10)
+         @test_throws FortranFilesError @fread fdir AA::(Float64,10)
          # read too much
-         @test_throws FortranFilesError A = read(fdir, rec=1, (Float64,11))
+         @test_throws FortranFilesError AA = read(fdir, rec=1, (Float64,11))
          close(fdir)
 
          # sequential access files
-         data = UInt8[]
-         io = IOBuffer(data, write=true)
-         fseq = FortranFile(io)
-         write(fseq, ones(10))
-         close(fseq)
-         io = IOBuffer(data)
-         fseq = FortranFile(io)
-         # with record number
-         @test_throws MethodError A = read(fseq, rec=1, (Float64,10))
-         # macro version
-         @test_throws FortranFilesError @fread fseq rec=1 A::(Float64,10)
-         # read too much
-         @test_throws FortranFilesError A = read(fseq, (Float64,11))
-         close(fseq)
+         for recmrk in (RECMRK4B,RECMRK4Bwosr)
+            data = UInt8[]
+            io = IOBuffer(data, write=true)
+            fseq = FortranFile(io, marker=recmrk)
+            write(fseq, A)
+            write(fseq, B)
+            close(fseq)
+            io = IOBuffer(data)
+            fseq = FortranFile(io, marker=recmrk)
+            # with record number
+            @test_throws MethodError AA = read(fseq, rec=1, (Float64,10))
+            # macro version
+            @test_throws FortranFilesError @fread fseq rec=1 AA::(Float64,10)
+            # read too much
+            @test_throws FortranFilesError AA = read(fseq, (Float64,11))
+            close(fseq)
+            # garbage data: wrong trailing record marker
+            data = UInt8[]
+            io = IOBuffer(data, write=true)
+            write(io, UInt32(80), A, UInt32(40))
+            close(io)
+            io = IOBuffer(data)
+            fseq = FortranFile(io, marker=recmrk)
+            @test_throws FortranFilesError AA = read(fseq, (Float64,10))
+            close(fseq)
+         end
       end
    end
 end

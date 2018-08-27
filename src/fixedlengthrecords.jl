@@ -44,7 +44,7 @@ end
 
 function unsafe_write( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
    if (n > rec.nleft)
-      fthrow("attempting to write beyond record end")
+      fthrow("attempting to write beyond record end") #TODO
    end
    nwritten = unsafe_write( rec.io, p, n )
    rec.nleft -= n
