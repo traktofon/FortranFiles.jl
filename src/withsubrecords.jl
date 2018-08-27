@@ -51,7 +51,7 @@ end
 function advance!( rec::RecordWithSubrecords )
    subreclen, sign = rdmarker(rec) # read trailing record marker
    if subreclen != rec.subreclen
-      fthrow("trailing subrecord marker doesn't match") #TODO
+      fthrow("trailing subrecord marker doesn't match")
    end
    if rec.more
       subreclen, more = rdmarker(rec) # read next leading subrecord marker
@@ -79,9 +79,7 @@ end
 function unsafe_write( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
    nwritten = 0
    while (n>0)
-      if rec.totleft==0
-         fthrow("attempting to write beyond record end") #TODO
-      end
+      if rec.totleft==0; fthrow("attempting to write beyond record end"); end
       towrite = min(n, rec.subleft)
       nwritten += unsafe_write(rec.io, p, towrite)
       p += towrite

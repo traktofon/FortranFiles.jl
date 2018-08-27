@@ -4,6 +4,8 @@ using FortranFiles
 using Compat.Test
 using Base.Iterators: product
 
+include("test_macro_throws.jl")
+
 import FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
 
 # To test long records being split into subrecords, without needing
@@ -268,6 +270,12 @@ end
             close(fseq)
          end
       end
+   end
+
+   @testset "Macro syntax" begin
+      @test_macro_throws ArgumentError eval(:(@fread f foo=1))
+      @test_macro_throws ArgumentError eval(:(@fread f 10))
+      @test_macro_throws ArgumentError eval(:(@fread f (Int,Int)))
    end
 end
 

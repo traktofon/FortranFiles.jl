@@ -24,7 +24,7 @@ end
 
 function unsafe_read( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
    if (n > rec.nleft)
-      fthrow("attempting to read beyond record end") #TODO
+      fthrow("attempting to read beyond record end")
    end
    unsafe_read( rec.io, p, n )
    rec.nleft -= n
@@ -32,9 +32,7 @@ function unsafe_read( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
 end
 
 function unsafe_write( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
-   if (n > rec.nleft)
-      fthrow("attempting to write beyond record end") #TODO
-   end
+   if (n > rec.nleft); fthrow("attempting to write beyond record end"); end
    nwritten = unsafe_write( rec.io, p, n )
    rec.nleft -= n
    return nwritten
@@ -42,15 +40,13 @@ end
 
 function close( rec::RecordWithoutSubrecords{T} ) where {T}
    if rec.writable
-      if rec.nleft != 0
-         fthrow("record has not yet been completely written") #TODO
-      end
+      @assert rec.nleft == 0
       write(rec.io, rec.convert.onwrite( convert(T, rec.reclen)) ) # write trailing record marker
    else
       skip(rec.io, rec.nleft)
       reclen = rec.convert.onread( read(rec.io, T) ) # read trailing record marker
       if reclen != rec.reclen
-         fthrow("trailing record marker doesn't match") #TODO
+         fthrow("trailing record marker doesn't match")
       end
    end
    nothing
