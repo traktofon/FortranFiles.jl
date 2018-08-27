@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Documentation",
     "category": "section",
-    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"tests.md\",\n   \"theindex.md\"\n]This documentation uses julia-0.7 syntax. On julia-0.6, either use using Compat or make the following adjustments:ComplexF64 -> Complex128 and ComplexF32 -> Complex64\ndrop undef from Array constructors"
+    "text": "Pages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"exceptions.md\",\n   \"tests.md\",\n   \"theindex.md\"\n]This documentation uses julia-0.7/1.0 syntax. On julia-0.6, either use using Compat or make the following adjustments:ComplexF64 -> Complex128 and ComplexF32 -> Complex64\ndrop undef from Array constructors"
 },
 
 {
@@ -377,6 +377,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "exceptions.html#",
+    "page": "Exceptions",
+    "title": "Exceptions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "exceptions.html#FortranFiles.FortranFilesError",
+    "page": "Exceptions",
+    "title": "FortranFiles.FortranFilesError",
+    "category": "type",
+    "text": "FortranFilesError(msg)\n\nException thrown if an operation on a FortranFile fails or cannot be performed. Argument msg is a description of the failure mode.\n\n\n\n"
+},
+
+{
+    "location": "exceptions.html#Exceptions-1",
+    "page": "Exceptions",
+    "title": "Exceptions",
+    "category": "section",
+    "text": "The following exception type is used to signal errors when handling FortranFiles.FortranFilesErrorThe errors could be:using unsupported features, or invalid combinations of features\nI/O errors related to the Fortran layer, e.g. non-matching record markers. I/O errors on the underlying IO, e.g. read/write failure, will show up as one of the Julia built-in exceptions."
+},
+
+{
     "location": "tests.html#",
     "page": "Package Tests",
     "title": "Package Tests",
@@ -405,7 +429,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Index",
     "title": "Index",
     "category": "section",
-    "text": "CurrentModule = FortranFilesPages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"tests.md\"\n]"
+    "text": "CurrentModule = FortranFilesPages = [\n   \"files.md\",\n   \"types.md\",\n   \"read.md\",\n   \"write.md\",\n   \"exceptions.md\",\n   \"tests.md\"\n]"
 },
 
 ]}
