@@ -51,20 +51,20 @@ macro fread(fortranFile, args...)
                recnum = esc(arg.args[2])
                haverecnum = true
             else
-               error("unknown keyword argument '$(arg.args[1])'")
+               throw(ArgumentError("unknown keyword argument '$(arg.args[1])'"))
             end
          elseif arg.head == :(::)
             var = esc(arg.args[1])
             typ = esc(arg.args[2])
             push!(specs, (var,typ))
          else
-            error("unsupported specification for read: '$(arg)'")
+            throw(ArgumentError("unsupported specification for read: '$(arg)'"))
          end
       elseif isa(arg, Symbol)
          var = esc(arg)
          push!(specs, var)
       else
-         error("unsupported specification for read: '$(arg)'")
+         throw(ArgumentError("unsupported specification for read: '$(arg)'"))
       end
    end
 

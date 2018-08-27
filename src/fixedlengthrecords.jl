@@ -34,14 +34,18 @@ function gotorecord( f::FortranFile{DirectAccess}, recnum::Integer )
 end
 
 function unsafe_read( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
-   if (n > rec.nleft); fthrow("attempting to read beyond record end"); end
+   if (n > rec.nleft)
+      fthrow("attempting to read beyond record end")
+   end
    unsafe_read( rec.io, p, n )
    rec.nleft -= n
    nothing
 end
 
 function unsafe_write( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
-   if (n > rec.nleft); fthrow("attempting to write beyond record end"); end
+   if (n > rec.nleft)
+      fthrow("attempting to write beyond record end")
+   end
    nwritten = unsafe_write( rec.io, p, n )
    rec.nleft -= n
    return nwritten

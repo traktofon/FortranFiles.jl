@@ -30,12 +30,13 @@ Pages = [
    "types.md",
    "read.md",
    "write.md",
+   "exceptions.md",
    "tests.md",
    "theindex.md"
 ]
 ```
 
-This documentation uses julia-0.7 syntax. On julia-0.6, either use `using Compat`
+This documentation uses julia-0.7/1.0 syntax. On julia-0.6, either use `using Compat`
 or make the following adjustments:
 * `ComplexF64` -> `Complex128` and `ComplexF32` -> `Complex64`
 * drop `undef` from Array constructors

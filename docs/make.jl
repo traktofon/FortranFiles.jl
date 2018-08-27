@@ -10,6 +10,7 @@ makedocs(
       "types.md",
       "read.md",
       "write.md",
+      "exceptions.md",
       "tests.md",
       "Index" => "theindex.md"
    ]
