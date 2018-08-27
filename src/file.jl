@@ -37,16 +37,16 @@ function FortranFile(io::IO; access = "sequential", marker = RECMRKDEF, recl::In
    conv = get_convert(convert)
    if access == "sequential"
       if recl != 0
-         error("sequential-access with fixed-length records not supported")
+         fthrow("sequential-access with fixed-length records not supported")
       end
       acctyp = SequentialAccess(marker)
    elseif access == "direct"
       if recl == 0
-         error("must specify record length for direct-access files (use recl keyword argument)")
+         fthrow("must specify record length for direct-access files (use recl keyword argument)")
       end
       acctyp = DirectAccess(Int64(recl))
    else
-      error("unsupported access mode \"$(access)\"")
+      fthrow("unsupported access mode \"$(access)\"")
    end
    return FortranFile(io, acctyp, conv)
 end

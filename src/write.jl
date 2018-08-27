@@ -25,7 +25,7 @@ end
 
 function write(f::FortranFile{DirectAccess}, items...; rec::Integer=0)
    if rec==0
-      error("direct-access files require specifying the record to be written (use rec keyword argument)")
+      fthrow("direct-access files require specifying the record to be written (use rec keyword argument)")
    end
    towrite = sizeof_vars(items)
    record = Record(f, rec, towrite)
@@ -68,7 +68,6 @@ end
 
 # write strings: delegate to data field
 write_var( rec::Record, var::FString ) = write_var(rec, var.data)
-# TODO: the following triggers internal error on method resolution for julia-0.7
 write_var( rec::Record, arr::Array{FString{L},N} ) where {L,N} = write_fstrings(rec, arr)
 write_fstrings( rec::Record, arr::Array{FString{L},N} ) where {L,N} = sum( write_var(rec, var.data) for var in arr )
 
@@ -82,14 +81,14 @@ write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{Int8,N} ) where {N
 write_var( rec::RecordWithSubrecords{NOCONV}, arr::Array{FString{L},N} ) where {L,N} = write_fstrings(rec, arr)
 write_var( rec::RecordWithoutSubrecords{R,NOCONV}, arr::Array{FString{L},N} ) where {L,N,R} = write_fstrings(rec, arr)
 
+# check for type compatibility with Fortran
 check_fortran_type(x::Array) = _check_fortran_type(eltype(x))
 check_fortran_type(x)        = _check_fortran_type(typeof(x))
-
 _check_fortran_type(::Type{FString{L}}) where L = true
 _check_fortran_type(T::Type) = isbitstype(T)
 
 function sizeof_var( var::T ) where {T}
-   check_fortran_type(var) || throwftnio("cannot serialize datatype $T for Fortran")
+   check_fortran_type(var) || fthrow("cannot serialize datatype $T for Fortran")
    sizeof(var)
 end
 

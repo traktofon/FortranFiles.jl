@@ -190,7 +190,7 @@ end
    open("/dev/null", "w") do null
       ff = FortranFile(null)
       inhomA = Integer[1, big(2)]
-      @test_throws FortranIOError write(ff, inhomA)
+      @test_throws FortranFilesError write(ff, inhomA)
    end
 end
 

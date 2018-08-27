@@ -1,15 +1,14 @@
-
 """
-    FortranIOError(msg)
+    FortranFilesError(msg)
 
-Exception thrown if an IO operation on a FortranFile fails or cannot be performed.
+Exception thrown if an operation on a FortranFile fails or cannot be performed.
 Argument `msg` is a description of the failure mode.
 """
-struct FortranIOError <: Exception
+struct FortranFilesError <: Exception
    msg::String
 end
 
-throwftnio(msg) = throw(FortranIOError(msg))
+fthrow(msg) = throw(FortranFilesError(msg))
 
-Base.showerror(io::IO, ex::FortranIOError) = print(io, "FortranIOError: $(ex.msg)")
+Base.showerror(io::IO, exc::FortranFilesError) = print(io, "FortranFilesError: $(exc.msg)")
 

@@ -21,7 +21,7 @@ function Record( f::FortranFile{DirectAccess}, recnum::Integer, towrite::Integer
    conv = f.convert
    reclen = f.acctyp.reclen
    if towrite > reclen
-      error("attempting to write record of $(towrite) bytes into a file of record length $(reclen) bytes")
+      fthrow("attempting to write record of $(towrite) bytes into a file of record length $(reclen) bytes")
    end
    gotorecord(f, recnum)
    FixedLengthRecord(f.io, reclen, reclen, true, conv)
@@ -34,14 +34,14 @@ function gotorecord( f::FortranFile{DirectAccess}, recnum::Integer )
 end
 
 function unsafe_read( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
-   if (n > rec.nleft); error("attempting to read beyond record end"); end
+   if (n > rec.nleft); fthrow("attempting to read beyond record end"); end
    unsafe_read( rec.io, p, n )
    rec.nleft -= n
    nothing
 end
 
 function unsafe_write( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
-   if (n > rec.nleft); error("attempting to write beyond record end"); end
+   if (n > rec.nleft); fthrow("attempting to write beyond record end"); end
    nwritten = unsafe_write( rec.io, p, n )
    rec.nleft -= n
    return nwritten

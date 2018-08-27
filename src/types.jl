@@ -63,6 +63,6 @@ function get_convert(name::String)
          return conv
       end
    end
-   error("unknown convert method \"$name\"")
+   fthrow("unknown convert method \"$name\"")
 end
 

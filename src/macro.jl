@@ -72,14 +72,14 @@ macro fread(fortranFile, args...)
    if haverecnum
       push!(ex.args, quote
          if !isa(f, FortranFile{DirectAccess})
-            error("keyword argument 'rec' only allowed for direct-access files")
+            fthrow("keyword argument 'rec' only allowed for direct-access files")
          end
          rec = Record(f, $recnum)
       end)
    else
       push!(ex.args, quote
          if isa(f, FortranFile{DirectAccess})
-            error("keyword argument 'rec' required for direct-access files")
+            fthrow("keyword argument 'rec' required for direct-access files")
          end
          rec = Record(f)
       end)

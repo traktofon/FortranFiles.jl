@@ -33,7 +33,7 @@ end
 
 function read( f::FortranFile{DirectAccess}, specs... ; rec::Integer=0 )
    if rec == 0
-      error("direct-access files require specifying the record to be read (use rec keyword argument)")
+      fthrow("direct-access files require specifying the record to be read (use rec keyword argument)")
    end
    record = Record(f, rec)
    result = fread(record, specs...)
