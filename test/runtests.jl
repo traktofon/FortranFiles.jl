@@ -6,7 +6,7 @@ using Base.Iterators: product
 
 include("test_macro_throws.jl")
 
-import FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
+using FortranFiles: RecordMarkerType, AccessMode, SequentialAccess, DirectAccess
 
 # To test long records being split into subrecords, without needing
 # test data files of several GB, define a custom RecordMarkerType with

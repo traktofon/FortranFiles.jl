@@ -1,4 +1,4 @@
-import Compat: isbitstype
+using  Compat: isbitstype
 import Base: write
 
 """

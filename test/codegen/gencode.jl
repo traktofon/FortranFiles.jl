@@ -1,8 +1,8 @@
-import Compat: Random, ComplexF32, ComplexF64
+using  Compat: ComplexF32, ComplexF64
+import Compat.Random
 
-import FortranFiles: FString
+using  FortranFiles: FString
 import Base: size
-import Random
 
 struct CodegenTask
    jtype :: DataType
@@ -126,7 +126,7 @@ end
 
 function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
 # will generate (8+nstrlen)*(nscalar+3*narray) CodegenTasks
-   @static if VERSION >=v"0.7.0"
+   @static if VERSION >= v"0.7.0-beta2.171"
       Random.seed!(seed)
    else
       Random.srand(seed)
