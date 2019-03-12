@@ -1,7 +1,7 @@
 import Base: sizeof, print, show, convert, read, write, bswap, ==
 
 
-const Fchar = Cchar
+const Fchar = Int8
 
 """
     FString{L}
@@ -26,8 +26,13 @@ show(io::IO, s::FString{L}) where {L} = begin print(io, "FString($L,"); show(io,
 bswap(s::FString{L}) where {L} = s # no conversion needed for byte-based strings
 
 function convert(::Type{FString{L}}, s::String) where {L}
-   l = length(s)
-   FString{L}( [ Fchar((i>l) ? ' ' : s[i]) for i=1:L ] )
+   spc  = Fchar(' ')
+   data = fill(spc, L)
+   for (i,c) in enumerate(s)
+      if i>L; break; end
+      data[i] = Fchar(c)
+   end
+   FString{L}(data)
 end
 
 """
