@@ -1,4 +1,4 @@
-import Base: close, show
+import Base: close, show, eof
 
 struct FortranFile{A<:AccessMode, C<:Conversion}
    io     :: IO    # the underyling I/O stream
@@ -67,6 +67,9 @@ rewind(f::FortranFile) = seek(f.io, 0)
 
 
 close(f::FortranFile) = close(f.io)
+
+
+eof(f::FortranFile) = eof(f.io)
 
 
 function show(io::IO, f::FortranFile)
