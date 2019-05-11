@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Files",
     "title": "Other functions on FortranFiles",
     "category": "section",
-    "text": "To close the file, use the standard Julia close function.The following functions are provided to emulate certain Fortran I/O statements:rewind"
+    "text": "To close the file, use the standard Julia close function.To test for EOF, use the standard Julia eof function.The following functions are provided to emulate certain Fortran I/O statements:rewind"
 },
 
 {
