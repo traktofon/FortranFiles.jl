@@ -158,7 +158,7 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
    jskf = open("jskip.jl", "w")
    jfrf = open("jfread.jl", "w")
    print(jwrf, "function writedata(f::FortranFile, data)\n")
-   print(jrdf, "function readdata(f::FortranFile)\n   data = Any[]\n")
+   print(jrdf, "function readdata(f::FortranFile)\n   data = Any[]\n   @test eof(f) == false\n")
    print(jskf, "function skipdata(f::FortranFile)\n   data = Any[]\n")
    print(jfrf, "function freaddata(f::FortranFile)\n   data = Any[]\n")
 
@@ -195,7 +195,7 @@ function gencode(nscalar=5, narray=3, nstrlen=3; seed=1)
    end
 
    print(jwrf, "end\n")
-   print(jrdf, "   return data\nend\n")
+   print(jrdf, "   @test eof(f) == true\n   return data\nend\n")
    print(jskf, "   return data\nend\n")
    print(jfrf, "   return data\nend\n")
    close(fwrf)

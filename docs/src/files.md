@@ -56,6 +56,8 @@ read or write data to `FortranFile`s.
 
 To close the file, use the standard Julia `close` function.
 
+To test for EOF, use the standard Julia `eof` function.
+
 The following functions are provided to emulate certain Fortran I/O statements:
 ```@docs
 rewind
