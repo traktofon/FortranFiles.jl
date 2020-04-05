@@ -2,32 +2,23 @@
 
 A Julia package for reading/writing Fortran unformatted (i.e. binary) files.
 
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://traktofon.github.io/FortranFiles.jl/latest/)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://traktofon.github.io/FortranFiles.jl/stable/)
 [![Build Status](https://travis-ci.org/traktofon/FortranFiles.jl.svg?branch=master)](https://travis-ci.org/traktofon/FortranFiles.jl)
 [![coveralls Status](https://coveralls.io/repos/traktofon/FortranFiles.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/traktofon/FortranFiles.jl?branch=master)
 [![codecov.io Status](http://codecov.io/github/traktofon/FortranFiles.jl/coverage.svg?branch=master)](https://codecov.io/gh/traktofon/FortranFiles.jl/branch/master)
 
-Supported Julia versions:
-- 1.0: working fine
-- 0.7: working fine
-- 0.6: working fine
-- 0.5 and earlier: not supported
+Julia >= 1.0 is required.
+
 
 ## Quickstart ##
 
-Full documentation is available at <https://traktofon.github.io/FortranFiles.jl/latest/>.
+Full documentation is available at <https://traktofon.github.io/FortranFiles.jl/stable/>.
 
-Installation: In julia-0.6,
-```julia
-Pkg.add("FortranFiles")
-```
-or from julia-0.7:
+Installation:
 ```
 # type ] to enter package managing mode
 pkg> add FortranFiles
 ```
-
-The following examples use julia-0.7/1.0 syntax. They also work in julia-0.6 with `using Compat`.
 
 Example usage for reading files:
 ```julia

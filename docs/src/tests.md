@@ -2,7 +2,8 @@
 
 This package can be tested in the usual Julia way:
 ```julia
-Pkg.test("FortranFiles")
+# press ] to enter Pkg mode
+pkg> test FortranFiles
 ```
 However, in order to test whether files written by a Fortran program
 are properly read, this first needs to generate some Fortran output.

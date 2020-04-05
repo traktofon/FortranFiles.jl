@@ -20,14 +20,14 @@ The following table lists the Julia types which correspond to the standard Fortr
 
 | Fortran type         | a.k.a.           | Julia type   |
 | -------------------- | ---------------- | ------------ |
-| INTEGER(KIND=INT8)   | INTEGER*1        | Int8         |
-| INTEGER(KIND=INT16)  | INTEGER*2        | Int16        |
-| INTEGER(KIND=INT32)  | INTEGER*4        | Int32        |
-| INTEGER(KIND=INT64)  | INTEGER*8        | Int64        |
-| REAL(KIND=REAL32)    | REAL*4           | Float32      |
-| REAL(KIND=REAL64)    | REAL*8           | Float64      |
-| COMPLEX(KIND=REAL32) | COMPLEX*8        | ComplexF32    |
-| COMPLEX(KIND=REAL64) | COMPLEX*16       | ComplexF64   |
+| INTEGER(KIND=INT8)   | INTEGER\*1       | Int8         |
+| INTEGER(KIND=INT16)  | INTEGER\*2       | Int16        |
+| INTEGER(KIND=INT32)  | INTEGER\*4       | Int32        |
+| INTEGER(KIND=INT64)  | INTEGER\*8       | Int64        |
+| REAL(KIND=REAL32)    | REAL\*4          | Float32      |
+| REAL(KIND=REAL64)    | REAL\*8          | Float64      |
+| COMPLEX(KIND=REAL32) | COMPLEX\*8       | ComplexF32   |
+| COMPLEX(KIND=REAL64) | COMPLEX\*16      | ComplexF64   |
 | CHARACTER(LEN=*N*)   | CHARACTER\*(*N*) | FString{*N*} |
 
 The first column lists the datatypes using the kind parameters according to the
