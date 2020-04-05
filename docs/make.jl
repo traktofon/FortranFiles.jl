@@ -3,6 +3,7 @@ using Documenter, FortranFiles
 makedocs(
    modules  = [FortranFiles],
    sitename = "FortranFiles.jl",
+   format = Documenter.HTML(prettyurls = false),
    pages = [
       "Home" => "index.md",
       "files.md",
