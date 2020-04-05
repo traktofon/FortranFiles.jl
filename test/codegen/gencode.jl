@@ -1,8 +1,5 @@
-using  Compat: ComplexF32, ComplexF64
-import Compat.Random
-
 using  FortranFiles: FString
-import Base: size
+import Random
 
 struct CodegenTask
    jtype :: DataType
@@ -11,7 +8,7 @@ struct CodegenTask
    var   :: String
 end
 
-size(task::CodegenTask) = sizeof(task.jtype) * prod(task.sz)
+Base.size(task::CodegenTask) = sizeof(task.jtype) * prod(task.sz)
 
 function fdecl(task::CodegenTask)
    if task.sz == (1,)

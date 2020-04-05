@@ -1,6 +1,3 @@
-using  Compat: undef
-import Base: read
-
 """
     read(f::FortranFile [, spec [, spec [, ...]]])
     read(f::FortranFile, rec=N, [, spec [, spec [, ...]]])
@@ -24,14 +21,14 @@ Return value:
 * if one `spec` is given: the scalar or array requested
 * if more `spec`s are given: a tuple of the scalars and arrays requested, in order
 """
-function read( f::FortranFile, specs...)
+function Base.read( f::FortranFile, specs...)
    record = Record(f)
    result = fread(record, specs...)
    close(record)
    return result
 end
 
-function read( f::FortranFile{DirectAccess}, specs... ; rec::Integer=0 )
+function Base.read( f::FortranFile{DirectAccess}, specs... ; rec::Integer=0 )
    if rec == 0
       fthrow("direct-access files require specifying the record to be read (use rec keyword argument)")
    end

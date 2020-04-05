@@ -1,5 +1,3 @@
-import Base: show
-
 abstract type AccessMode end
 abstract type RecordMarkerType end
 abstract type Record<:IO end
@@ -9,7 +7,7 @@ struct SequentialAccess{RT<:RecordMarkerType} <: AccessMode
    recmrktyp :: RT
 end
 
-show(io::IO, a::SequentialAccess) =
+Base.show(io::IO, a::SequentialAccess) =
    print(io, "sequential-access, ", a.recmrktyp)
 
 
@@ -17,7 +15,7 @@ struct DirectAccess <: AccessMode
    reclen :: Int64
 end
 
-show(io::IO, a::DirectAccess) =
+Base.show(io::IO, a::DirectAccess) =
    print(io, "direct-access, $(a.reclen)-byte records")
 
 
@@ -26,7 +24,7 @@ end
 
 const RECMRK8B = WithoutSubrecords{Int64}()
 
-show(io::IO, ::WithoutSubrecords{T}) where {T} = 
+Base.show(io::IO, ::WithoutSubrecords{T}) where {T} = 
    print(io, "$(sizeof(T))-byte record markers, no subrecords")
 
 
@@ -39,7 +37,7 @@ const RECMRK4B = WithSubrecords(max_subrecord_length)
 
 const RECMRKDEF = RECMRK4B
 
-show(io::IO, rt::WithSubrecords) =
+Base.show(io::IO, rt::WithSubrecords) =
    print(io, "4-byte record markers, subrecords of max $(rt.max_subrecord_length) bytes")
 
 

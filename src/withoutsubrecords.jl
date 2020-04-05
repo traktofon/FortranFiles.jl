@@ -1,5 +1,3 @@
-import Base: close, unsafe_read, unsafe_write
-
 mutable struct RecordWithoutSubrecords{T,C} <: Record
    io       :: IO    # underlying I/O stream
    reclen   :: T     # length of this record
@@ -22,7 +20,7 @@ function Record( f::FortranFile{SequentialAccess{WithoutSubrecords{T}},C}, towri
    RecordWithoutSubrecords{T,C}(f.io, towrite, towrite, true, conv)
 end
 
-function unsafe_read( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
+function Base.unsafe_read( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
    if (n > rec.nleft)
       fthrow("attempting to read beyond record end")
    end
@@ -31,14 +29,14 @@ function unsafe_read( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
    nothing
 end
 
-function unsafe_write( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
+function Base.unsafe_write( rec::RecordWithoutSubrecords, p::Ptr{UInt8}, n::UInt )
    if (n > rec.nleft); fthrow("attempting to write beyond record end"); end
    nwritten = unsafe_write( rec.io, p, n )
    rec.nleft -= n
    return nwritten
 end
 
-function close( rec::RecordWithoutSubrecords{T} ) where {T}
+function Base.close( rec::RecordWithoutSubrecords{T} ) where {T}
    if rec.writable
       @assert rec.nleft == 0
       write(rec.io, rec.convert.onwrite( convert(T, rec.reclen)) ) # write trailing record marker

@@ -1,5 +1,3 @@
-import Base: close, unsafe_read, unsafe_write
-
 mutable struct RecordWithSubrecords{C} <: Record
    io        :: IO      # underlying I/O stream
    maxsrlen  :: Int32   # maximum subrecord length
@@ -61,7 +59,7 @@ function advance!( rec::RecordWithSubrecords )
    nothing
 end
 
-function unsafe_read( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
+function Base.unsafe_read( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
    while (n>0)
       if rec.subleft==0
          fthrow("attempting to read beyond record end")
@@ -76,7 +74,7 @@ function unsafe_read( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
    nothing
 end
 
-function unsafe_write( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
+function Base.unsafe_write( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
    nwritten = 0
    while (n>0)
       if rec.totleft==0; fthrow("attempting to write beyond record end"); end
@@ -105,7 +103,7 @@ function unsafe_write( rec::RecordWithSubrecords, p::Ptr{UInt8}, n::UInt )
    return nwritten
 end
 
-function close( rec::RecordWithSubrecords )
+function Base.close( rec::RecordWithSubrecords )
    if rec.writable
       @assert rec.totleft == 0
       @assert rec.subleft == 0

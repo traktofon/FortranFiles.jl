@@ -1,6 +1,3 @@
-using  Compat: isbitstype
-import Base: write
-
 """
     write(f::FortranFile, items...)
     write(f::FortranFile, rec=N, items...)
@@ -14,7 +11,7 @@ taken up by the record markers.
 For direct-access files, the number of the record to be written must be
 specified with the `rec` keyword (N=1 for the first record).
 """
-function write(f::FortranFile, items...)
+function Base.write(f::FortranFile, items...)
    # how much data to write?
    towrite = sizeof_vars(items)
    record = Record(f, towrite)
@@ -23,7 +20,7 @@ function write(f::FortranFile, items...)
    return result
 end
 
-function write(f::FortranFile{DirectAccess}, items...; rec::Integer=0)
+function Base.write(f::FortranFile{DirectAccess}, items...; rec::Integer=0)
    if rec==0
       fthrow("direct-access files require specifying the record to be written (use rec keyword argument)")
    end

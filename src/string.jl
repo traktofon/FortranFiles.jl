@@ -1,6 +1,3 @@
-import Base: sizeof, print, show, convert, read, write, bswap, ==
-
-
 const Fchar = Int8
 
 """
@@ -14,18 +11,17 @@ struct FString{L}
    data :: Array{Fchar,1}
 end
 
-sizeof(::Type{FString{L}}) where {L} = L
-sizeof(::FString{L}) where {L} = L
-sizeof(a::Array{FString{L}}) where {L} = L*length(a)
+Base.sizeof(::Type{FString{L}}) where {L} = L
+Base.sizeof(::FString{L}) where {L} = L
+Base.sizeof(a::Array{FString{L}}) where {L} = L*length(a)
 
-# print(io::IO, s::FString{L}) where {L} = print(io, trimstring(s))
-show(io::IO, s::FString{L}) where {L} = begin print(io, "FString($L,"); show(io, trimstring(s)); print(io, ")") end
+Base.show(io::IO, s::FString{L}) where {L} = begin print(io, "FString($L,"); show(io, trimstring(s)); print(io, ")") end
 
-==(a::FString, b::FString) = trimstring(a)==trimstring(b)
+Base.:(==)(a::FString, b::FString) = trimstring(a)==trimstring(b)
 
-bswap(s::FString{L}) where {L} = s # no conversion needed for byte-based strings
+Base.bswap(s::FString{L}) where {L} = s # no conversion needed for byte-based strings
 
-function convert(::Type{FString{L}}, s::String) where {L}
+function Base.convert(::Type{FString{L}}, s::String) where {L}
    spc  = Fchar(' ')
    data = fill(spc, L)
    for (i,c) in enumerate(s)
@@ -45,16 +41,16 @@ As in Fortran, the string will be padded with spaces or truncated in order to re
 FString(L, s::String) = convert( FString{L}, s )
 
 String(s::FString{L}) where {L} = String(map(Char,s.data))
-convert(::Type{String}, s::FString{L}) where {L} = String(s)
+Base.convert(::Type{String}, s::FString{L}) where {L} = String(s)
 
 
-function read( io::IO, t::Type{FString{L}} ) where {L}
+function Base.read( io::IO, t::Type{FString{L}} ) where {L}
    s = read!(io, Array{Fchar}(undef, L))
    FString{L}(s)
 end
 
 
-function write( io::IO, s::FString{L} ) where {L}
+function Base.write( io::IO, s::FString{L} ) where {L}
    write(io, s.data)
 end
 

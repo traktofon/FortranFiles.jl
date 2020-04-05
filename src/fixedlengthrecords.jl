@@ -1,5 +1,3 @@
-import Base: close, unsafe_read, unsafe_write
-
 mutable struct FixedLengthRecord{T,C} <: Record
    io       :: IO    # underlying I/O stream
    reclen   :: T     # length of this record
@@ -33,7 +31,7 @@ function gotorecord( f::FortranFile{DirectAccess}, recnum::Integer )
    seek(f.io, pos)
 end
 
-function unsafe_read( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
+function Base.unsafe_read( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
    if (n > rec.nleft)
       fthrow("attempting to read beyond record end")
    end
@@ -42,14 +40,14 @@ function unsafe_read( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
    nothing
 end
 
-function unsafe_write( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
+function Base.unsafe_write( rec::FixedLengthRecord, p::Ptr{UInt8}, n::UInt )
    if (n > rec.nleft); fthrow("attempting to write beyond record end"); end
    nwritten = unsafe_write( rec.io, p, n )
    rec.nleft -= n
    return nwritten
 end
 
-function close( rec::FixedLengthRecord )
+function Base.close( rec::FixedLengthRecord )
    if rec.nleft != 0
       if rec.writable
          # Fortran standard 9.6.4.5.2 point 7:

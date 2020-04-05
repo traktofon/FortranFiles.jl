@@ -1,7 +1,5 @@
-using Compat: ComplexF32, ComplexF64, undef, popfirst!, IOBuffer
-
 using FortranFiles
-using Compat.Test
+using Test: @test, @testset, @test_throws
 using Base.Iterators: product
 
 include("test_macro_throws.jl")

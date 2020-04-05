@@ -1,5 +1,3 @@
-import Base: close, show, eof
-
 struct FortranFile{A<:AccessMode, C<:Conversion}
    io     :: IO    # the underyling I/O stream
    acctyp :: A
@@ -66,13 +64,13 @@ FortranFile(fn::String, mode = "r"; kwargs...) = FortranFile(open(fn,mode); kwar
 rewind(f::FortranFile) = seek(f.io, 0)
 
 
-close(f::FortranFile) = close(f.io)
+Base.close(f::FortranFile) = close(f.io)
 
 
-eof(f::FortranFile) = eof(f.io)
+Base.eof(f::FortranFile) = eof(f.io)
 
 
-function show(io::IO, f::FortranFile)
+function Base.show(io::IO, f::FortranFile)
    print(io, "FortranFile(")
    show(io, f.io)
    print(io, "), $(f.convert.name) byte order, ")
