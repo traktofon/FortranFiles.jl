@@ -9,6 +9,11 @@ julia:
   - 1
   - nightly
 
+branches:
+  only:
+    - master
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
 notifications:
   email: false
 
@@ -34,4 +39,3 @@ jobs:
         - julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
         - julia --project=docs/ docs/make.jl
       after_success: skip
-
