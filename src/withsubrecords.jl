@@ -34,7 +34,7 @@ function Record( f::FortranFile{SequentialAccess{WithSubrecords}} )
    conv = f.convert
    msl = f.acctyp.recmrktyp.max_subrecord_length
    subreclen, more = rdmarker(f.io, conv.onread) # read leading record marker
-   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, false, false, 0, conv)
+   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, false, false, Int64(0), conv)
 end
 
 function Record( f::FortranFile{SequentialAccess{WithSubrecords}}, towrite::Integer )
@@ -43,7 +43,7 @@ function Record( f::FortranFile{SequentialAccess{WithSubrecords}}, towrite::Inte
    msl = f.acctyp.recmrktyp.max_subrecord_length
    subreclen, more = mkmarker(towrite, msl)
    wrmarker(f.io, conv.onwrite, subreclen, more) # write leading record marker
-   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, true, true, towrite, conv)
+   RecordWithSubrecords(f.io, msl, subreclen, subreclen, more, true, true, Int64(towrite), conv)
 end
 
 function advance!( rec::RecordWithSubrecords )
