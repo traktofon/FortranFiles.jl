@@ -268,6 +268,16 @@ end
             close(fseq)
          end
       end
+
+      @testset "do syntax" begin
+         fn = tempname()
+         FortranFile(fn, "w") do io
+            write(io, 1.0)
+         end
+         FortranFile(fn) do io
+            @test read(io, Float64) == 1.0
+         end
+      end
    end
 
    @testset "Macro syntax" begin
